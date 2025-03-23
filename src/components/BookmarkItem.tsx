@@ -59,7 +59,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
       }`}
       style={{ 
         opacity: isDragging ? 0.5 : 1,
-        maxWidth: "60px", // Reduced from the implied wider width to half
+        maxWidth: "80px", // Increased from 60px to 80px as requested
         width: "100%"
       }}
       onMouseEnter={() => setIsHovered(true)}
