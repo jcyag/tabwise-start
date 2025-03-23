@@ -126,16 +126,18 @@ const BookmarkGroup = ({
       </div>
       
       {isExpanded && (
-        <div className="space-y-2 animate-slide-in">
+        <div className="animate-slide-in">
           {filteredBookmarks.length > 0 ? (
-            filteredBookmarks.map((bookmark) => (
-              <BookmarkItem
-                key={bookmark.id}
-                bookmark={bookmark}
-                onDelete={onDeleteBookmark}
-                onEdit={onEditBookmark}
-              />
-            ))
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+              {filteredBookmarks.map((bookmark) => (
+                <BookmarkItem
+                  key={bookmark.id}
+                  bookmark={bookmark}
+                  onDelete={onDeleteBookmark}
+                  onEdit={onEditBookmark}
+                />
+              ))}
+            </div>
           ) : (
             <div className="text-center py-6 text-sm text-gray-500">
               No bookmarks in this group yet.

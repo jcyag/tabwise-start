@@ -57,17 +57,11 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
       className={`glass-morphism rounded-lg p-3 transition-all bookmark-item ${
         isDragging ? "opacity-50" : ""
       }`}
-      style={{ 
-        opacity: isDragging ? 0.5 : 1,
-        maxWidth: "120px",
-        width: "auto"
-      }}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div 
-        className="flex flex-col items-center relative"
-      >
+      <div className="flex flex-col items-center relative">
         <div className="mb-1.5 flex-shrink-0" onClick={handleClick}>
           <img
             src={getFaviconUrl(bookmark.url)}
