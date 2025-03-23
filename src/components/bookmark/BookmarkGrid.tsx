@@ -21,11 +21,13 @@ const BookmarkGrid = ({
   onAddBookmark,
   onMoveBookmark
 }: BookmarkGridProps) => {
-  // Create a drop target for sorting bookmarks within this group
   const [, bookmarksDrop] = useDrop({
     accept: "BOOKMARK",
     hover: (item: any) => {
-      if (item.type !== "BOOKMARK" || item.groupId !== groupId) return;
+      if (item.type === "BOOKMARK" && item.groupId === groupId) {
+        // Enable sorting functionality within the group
+        // Actual sorting happens in individual BookmarkItem components
+      }
     }
   });
 
