@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { getFaviconUrl, isExtensionContext } from "@/utils/helpers";
 
 interface HistoryItem {
   id: string;
@@ -19,7 +19,7 @@ const RecentHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        // Check if we're in a Chrome extension environment
+        // Check if we're in a Chrome extension environment with history API
         if (typeof chrome !== 'undefined' && chrome.history) {
           // We're in a Chrome extension, use the actual API
           chrome.history.search(
@@ -29,7 +29,7 @@ const RecentHistory = () => {
                 id: item.id || String(Math.random()),
                 url: item.url || "",
                 title: item.title || "Unknown",
-                favicon: `https://www.google.com/s2/favicons?domain=${new URL(item.url || "").hostname}`,
+                favicon: getFaviconUrl(item.url || ""),
                 lastVisitTime: item.lastVisitTime || Date.now(),
               }));
               
@@ -104,7 +104,7 @@ const RecentHistory = () => {
     };
 
     fetchHistory();
-  }, []);
+  }, [toast]);
 
   const navigateTo = (url: string) => {
     window.open(url, "_self");
