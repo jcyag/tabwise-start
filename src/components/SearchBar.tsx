@@ -7,6 +7,7 @@ interface SearchEngine {
   label: string;
   url: string;
   placeholder: string;
+  isLLM?: boolean;
 }
 
 const searchEngines: SearchEngine[] = [
@@ -31,14 +32,16 @@ const searchEngines: SearchEngine[] = [
   {
     name: "chatgpt",
     label: "ChatGPT",
-    url: "https://chat.openai.com/?q=",
-    placeholder: "Ask ChatGPT..."
+    url: "https://chat.openai.com/",
+    placeholder: "Ask ChatGPT...",
+    isLLM: true
   },
   {
     name: "yuanbao",
     label: "腾讯元宝",
-    url: "https://tencent.com/search?q=",
-    placeholder: "腾讯元宝搜索..."
+    url: "https://hunyuan.tencent.com/",
+    placeholder: "腾讯元宝搜索...",
+    isLLM: true
   }
 ];
 
@@ -51,7 +54,29 @@ const SearchBar = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      window.open(`${selectedEngine.url}${encodeURIComponent(query)}`, "_self");
+      if (selectedEngine.isLLM) {
+        handleLLMSearch(selectedEngine, query);
+      } else {
+        window.open(`${selectedEngine.url}${encodeURIComponent(query)}`, "_self");
+      }
+    }
+  };
+
+  const handleLLMSearch = (engine: SearchEngine, userQuery: string) => {
+    if (engine.name === "chatgpt") {
+      // Open ChatGPT with the query
+      const chatGptUrl = `${engine.url}?q=${encodeURIComponent(userQuery)}`;
+      window.open(chatGptUrl, "_blank");
+    } else if (engine.name === "yuanbao") {
+      // Open Tencent Yuanbao (might need adjustments based on their URL structure)
+      window.open(engine.url, "_blank");
+      
+      // If Tencent Yuanbao doesn't support direct query parameters, 
+      // we can only open the site and let the user paste the query manually
+      // You might want to copy the text to clipboard for easier pasting
+      navigator.clipboard.writeText(userQuery).catch(err => {
+        console.error("Could not copy text to clipboard:", err);
+      });
     }
   };
 
