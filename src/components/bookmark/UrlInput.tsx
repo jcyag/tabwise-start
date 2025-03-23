@@ -11,7 +11,7 @@ interface UrlInputProps {
 }
 
 const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
-  // Add local state to handle input value
+  // Create local state to track input value
   const [inputValue, setInputValue] = useState(url);
 
   // Update local state when prop changes
@@ -20,7 +20,7 @@ const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
   }, [url]);
 
   // Handle input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
     onChange(newValue);
@@ -40,11 +40,11 @@ const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
           type="text"
           id="url"
           value={inputValue}
-          onChange={handleInputChange}
+          onChange={handleChange}
           className={`w-full pl-10 pr-4 ${
             inputValue && !isValid
               ? "border-red-300 focus:ring-red-200"
-              : "border-gray-300 focus:ring-blue-200"
+              : ""
           }`}
           placeholder="https://example.com"
           autoComplete="off"

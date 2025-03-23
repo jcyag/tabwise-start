@@ -10,43 +10,37 @@ export const useBookmarkForm = () => {
   const [userEditedName, setUserEditedName] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
 
+  // Validate URL and extract name when URL changes
   useEffect(() => {
-    try {
-      if (url) {
-        let urlToValidate = url;
-        if (!/^https?:\/\//i.test(url)) {
-          urlToValidate = "http://" + url;
-        }
-        
-        // Validate URL
-        const valid = validateUrl(urlToValidate);
-        setIsValid(valid);
-        
-        // Only try to extract name if URL is valid and name hasn't been edited
-        if (valid && url.trim() !== "" && name === "" && !userEditedName) {
-          setIsFetching(true);
-          
-          try {
-            const domain = new URL(urlToValidate).hostname.replace("www.", "");
-            const domainParts = domain.split(".");
-            if (domainParts.length > 0) {
-              const siteName = domainParts[0].charAt(0).toUpperCase() + domainParts[0].slice(1);
-              setName(siteName);
-            }
-          } catch (e) {
-            console.log("Failed to extract domain:", e);
-          }
-          
-          setIsFetching(false);
-        }
-      } else {
-        setIsValid(false);
-      }
-    } catch (e) {
-      console.log("URL validation error:", e);
+    if (!url) {
       setIsValid(false);
+      return;
     }
-  }, [url, name, userEditedName]);
+
+    // Normalize URL for validation
+    let urlToValidate = url;
+    if (!/^https?:\/\//i.test(url)) {
+      urlToValidate = "http://" + url;
+    }
+    
+    // Validate URL
+    const valid = validateUrl(urlToValidate);
+    setIsValid(valid);
+    
+    // Only extract name if URL is valid and user hasn't edited the name field
+    if (valid && url.trim() !== "" && !userEditedName) {
+      try {
+        const domain = new URL(urlToValidate).hostname.replace("www.", "");
+        const domainParts = domain.split(".");
+        if (domainParts.length > 0) {
+          const siteName = domainParts[0].charAt(0).toUpperCase() + domainParts[0].slice(1);
+          setName(siteName);
+        }
+      } catch (e) {
+        console.log("Failed to extract domain:", e);
+      }
+    }
+  }, [url, userEditedName]);
 
   const handleUrlChange = (value: string) => {
     setUrl(value);

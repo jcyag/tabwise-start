@@ -24,13 +24,17 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     resetForm
   } = useBookmarkForm();
 
+  // Reset form and focus URL input when dialog opens
   useEffect(() => {
-    if (isOpen && urlInputRef.current) {
-      urlInputRef.current.focus();
-    }
-    
     if (isOpen) {
       resetForm();
+      
+      // Focus the URL input after a short delay to ensure the dialog is fully rendered
+      setTimeout(() => {
+        if (urlInputRef.current) {
+          urlInputRef.current.focus();
+        }
+      }, 100);
     }
   }, [isOpen, resetForm]);
 
