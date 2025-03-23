@@ -74,7 +74,7 @@ const SearchBar = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-3xl mx-auto mb-8 mt-12 fade-in relative">
+    <div className="w-full max-w-3xl mx-auto mb-8 mt-12 fade-in" style={{ position: 'relative', zIndex: 1001 }}>
       <form onSubmit={handleSearch} className="relative">
         <div className="relative flex items-center w-full">
           <div className="relative" ref={dropdownRef}>
@@ -88,7 +88,7 @@ const SearchBar = () => {
             </button>
             
             {dropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-36 rounded-md shadow-lg bg-white glass-morphism z-50 animate-fade-in overflow-hidden">
+              <div className="absolute top-full left-0 mt-2 w-36 rounded-md shadow-lg dropdown-menu z-[1000] animate-fade-in overflow-hidden">
                 <div className="py-1">
                   {searchEngines.map((engine) => (
                     <button
