@@ -29,7 +29,7 @@ const Index = () => {
           {/* Search bar */}
           <SearchBar />
           
-          {/* Recent history */}
+          {/* Recent history - adjusted spacing */}
           <RecentHistory />
           
           {/* Bookmark section */}

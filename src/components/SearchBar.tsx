@@ -83,18 +83,18 @@ const SearchBar = () => {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center text-gray-500 hover:text-gray-700 transition-colors"
             >
-              <span className="mr-1 font-medium hidden sm:inline">{selectedEngine.label}</span>
+              <span className="mr-1 font-medium hidden sm:inline whitespace-nowrap">{selectedEngine.label}</span>
               <ChevronDown size={18} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
             </button>
             
             {dropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-36 rounded-md shadow-lg glass-morphism z-20 animate-fade-in overflow-hidden">
+              <div className="absolute top-full left-0 mt-2 w-36 rounded-md shadow-lg bg-white glass-morphism z-20 animate-fade-in overflow-hidden">
                 <div className="py-1">
                   {searchEngines.map((engine) => (
                     <button
                       key={engine.name}
                       type="button"
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors whitespace-nowrap ${
                         selectedEngine.name === engine.name ? 'bg-gray-50 font-medium' : ''
                       }`}
                       onClick={() => handleEngineChange(engine)}

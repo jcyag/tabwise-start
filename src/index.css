@@ -119,3 +119,15 @@
 .smooth-transition {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Ensure Chinese characters display properly */
+.whitespace-nowrap {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+/* Ensure dropdown menu has proper background */
+.dropdown-menu {
+  background-color: white;
+  z-index: 100;
+}
