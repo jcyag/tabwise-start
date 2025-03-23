@@ -36,6 +36,9 @@ const Index = () => {
             <RecentHistory />
           </div>
           
+          {/* Visual separator */}
+          <div className="w-full h-8 mb-4"></div>
+          
           {/* Bookmark section */}
           <div style={{ position: 'relative', zIndex: 1 }}>
             <BookmarkSection />

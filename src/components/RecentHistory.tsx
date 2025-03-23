@@ -114,7 +114,7 @@ const RecentHistory = () => {
 
   if (loading) {
     return (
-      <div className="w-full max-w-4xl mx-auto mb-6 fade-in">
+      <div className="w-full max-w-4xl mx-auto mb-4 fade-in">
         <div className="flex items-center mb-3">
           <Clock size={18} className="mr-2 text-gray-500" />
           <h2 className="text-base font-medium text-gray-600">Recent History</h2>
@@ -134,7 +134,7 @@ const RecentHistory = () => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto mb-6 fade-in">
+    <div className="w-full max-w-4xl mx-auto mb-4 fade-in">
       <div className="flex items-center mb-3">
         <Clock size={18} className="mr-2 text-gray-500" />
         <h2 className="text-base font-medium text-gray-600">Recent History</h2>

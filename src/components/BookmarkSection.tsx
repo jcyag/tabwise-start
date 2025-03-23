@@ -44,7 +44,7 @@ const BookmarkSection = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="w-full max-w-3xl mx-auto fade-in">
+      <div className="w-full max-w-3xl mx-auto fade-in pt-4">
         <BookmarkHeader onAddGroup={openAddGroupDialog} />
 
         {groups.map((group, index) => (
