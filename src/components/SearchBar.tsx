@@ -1,5 +1,7 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Search, ChevronDown } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface SearchEngine {
   name: string;
@@ -49,6 +51,7 @@ const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,12 +71,60 @@ const SearchBar = () => {
       window.open(chatGptUrl, "_blank");
     } else if (engine.name === "yuanbao") {
       // Open Tencent Yuanbao with the updated URL
-      window.open(engine.url, "_blank");
+      // Use localStorage to temporarily store the query
+      localStorage.setItem('yuanbaoQuery', userQuery);
+      
+      // Open Yuanbao in a new tab
+      const yuanbaoWindow = window.open(engine.url, "_blank");
+      
+      if (yuanbaoWindow) {
+        // Set up a message to the user
+        toast({
+          title: "腾讯元宝已打开",
+          description: "搜索内容已复制，请在元宝对话框中粘贴。",
+          duration: 5000,
+        });
+      }
       
       // Copy the query to clipboard for easier pasting
       navigator.clipboard.writeText(userQuery).catch(err => {
         console.error("Could not copy text to clipboard:", err);
+        toast({
+          title: "无法自动复制文本",
+          description: "请手动复制您的搜索内容。",
+          variant: "destructive",
+        });
       });
+      
+      // Create a utility function to help with Yuanbao integration
+      // This will append a small script to the page to assist with integration
+      const yuanbaoScript = document.createElement('script');
+      yuanbaoScript.id = 'yuanbao-integration';
+      yuanbaoScript.textContent = `
+        // This is a utility to help integrate with Yuanbao
+        // It will be removed after use
+        window.addEventListener('message', function(event) {
+          if (event.data && event.data.type === 'YUANBAO_READY') {
+            const query = localStorage.getItem('yuanbaoQuery');
+            if (query) {
+              // Send the query back to the Yuanbao window
+              event.source.postMessage({
+                type: 'YUANBAO_QUERY',
+                query: query
+              }, '*');
+              // Clean up
+              localStorage.removeItem('yuanbaoQuery');
+            }
+          }
+        });
+      `;
+      document.body.appendChild(yuanbaoScript);
+      
+      // Clean up after a delay
+      setTimeout(() => {
+        const script = document.getElementById('yuanbao-integration');
+        if (script) script.remove();
+      }, 30000); // Remove after 30 seconds
     }
   };
 

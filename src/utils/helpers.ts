@@ -1,4 +1,3 @@
-
 export const generateId = (): string => {
   return Math.random().toString(36).substring(2, 9);
 };
@@ -39,5 +38,23 @@ export const formatDate = (dateString: string): string => {
     }).format(date);
   } catch (e) {
     return '';
+  }
+};
+
+export const postMessageToIframes = (message: any): void => {
+  try {
+    // Try to send messages to all iframes
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(iframe => {
+      try {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.postMessage(message, '*');
+        }
+      } catch (err) {
+        console.error('Error sending message to iframe:', err);
+      }
+    });
+  } catch (e) {
+    console.error('Error in postMessageToIframes:', e);
   }
 };
