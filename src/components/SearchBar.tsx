@@ -79,22 +79,37 @@ const SearchBar = () => {
       // Create the yuanbao URL with the conversation ID
       const yuanbaoUrl = `${engine.url}${conversationId}`;
       
-      // Use localStorage to temporarily store the query
-      localStorage.setItem('yuanbaoQuery', userQuery);
+      // Function to directly send a message to Yuanbao
+      const sendMessageToYuanbao = async (tab: Window | null, message: string) => {
+        if (!tab) return;
+        
+        // Wait for the page to load
+        setTimeout(() => {
+          // Create a message event to send to the new window
+          const messageEvent = {
+            type: 'YUANBAO_AUTO_QUERY',
+            query: message
+          };
+          
+          // Send the message to the new window
+          tab.postMessage(messageEvent, '*');
+          
+          // Notify the user
+          toast({
+            title: "已发送到腾讯元宝",
+            description: "您的问题已自动发送至元宝对话框。",
+            duration: 5000,
+          });
+        }, 2000); // Wait 2 seconds for the page to load
+      };
       
       // Open Yuanbao in a new tab
       const yuanbaoWindow = window.open(yuanbaoUrl, "_blank");
       
-      if (yuanbaoWindow) {
-        // Set up a message to the user
-        toast({
-          title: "腾讯元宝已打开",
-          description: "搜索内容已复制，请在元宝对话框中粘贴。",
-          duration: 5000,
-        });
-      }
+      // Send the message to Yuanbao
+      sendMessageToYuanbao(yuanbaoWindow, userQuery);
       
-      // Copy the query to clipboard for easier pasting
+      // Also copy the query to clipboard as a fallback
       navigator.clipboard.writeText(userQuery).catch(err => {
         console.error("Could not copy text to clipboard:", err);
         toast({
@@ -104,28 +119,78 @@ const SearchBar = () => {
         });
       });
       
-      // Create a utility function to help with Yuanbao integration
-      // This will append a small script to the page to assist with integration
+      // Add a message listener to allow communication with the Yuanbao page
+      window.addEventListener('message', function yuanbaoMessageHandler(event) {
+        if (event.data && event.data.type === 'YUANBAO_READY') {
+          event.source?.postMessage({
+            type: 'YUANBAO_QUERY',
+            query: userQuery
+          }, '*');
+          
+          // Clean up the event listener after use
+          window.removeEventListener('message', yuanbaoMessageHandler);
+        }
+      });
+      
+      // Inject a script into the parent page to help with Yuanbao integration
       const yuanbaoScript = document.createElement('script');
       yuanbaoScript.id = 'yuanbao-integration';
       yuanbaoScript.textContent = `
-        // This is a utility to help integrate with Yuanbao
-        // It will be removed after use
-        window.addEventListener('message', function(event) {
-          if (event.data && event.data.type === 'YUANBAO_READY') {
-            const query = localStorage.getItem('yuanbaoQuery');
-            if (query) {
-              // Send the query back to the Yuanbao window
-              event.source.postMessage({
-                type: 'YUANBAO_QUERY',
-                query: query
-              }, '*');
-              // Clean up
-              localStorage.removeItem('yuanbaoQuery');
+        // This script will automatically try to click on the input field and add text when Yuanbao is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          // Notify the parent window that Yuanbao is ready
+          window.opener && window.opener.postMessage({
+            type: 'YUANBAO_READY'
+          }, '*');
+          
+          // Listen for messages from the parent window
+          window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'YUANBAO_QUERY' || event.data.type === 'YUANBAO_AUTO_QUERY') {
+              // Try to find the input field and button
+              setTimeout(() => {
+                const inputFields = document.querySelectorAll('textarea, input[type="text"]');
+                const sendButtons = document.querySelectorAll('button');
+                
+                // Look for the chat input field
+                let inputField = null;
+                for (const field of inputFields) {
+                  if (field.placeholder && (field.placeholder.includes('输入') || 
+                      field.placeholder.includes('问题') || 
+                      field.placeholder.includes('聊天'))) {
+                    inputField = field;
+                    break;
+                  }
+                }
+                
+                // If we found an input field, set its value and try to submit
+                if (inputField) {
+                  inputField.value = event.data.query;
+                  inputField.dispatchEvent(new Event('input', { bubbles: true }));
+                  
+                  // Try to find and click the send button
+                  let sendButton = null;
+                  for (const button of sendButtons) {
+                    if (button.textContent && (button.textContent.includes('发送') || 
+                        button.textContent.includes('提问') || 
+                        button.textContent.includes('确认'))) {
+                      sendButton = button;
+                      break;
+                    }
+                  }
+                  
+                  if (sendButton) {
+                    setTimeout(() => {
+                      sendButton.click();
+                    }, 300);
+                  }
+                }
+              }, 1500);
             }
-          }
+          });
         });
       `;
+      
+      // Append the script to help with Yuanbao integration
       document.body.appendChild(yuanbaoScript);
       
       // Clean up after a delay
