@@ -166,4 +166,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+/* Ensure modal always appears on top */
+.modal-content {
+  position: relative;
+  z-index: 10000;
 }

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { X, Link, Edit } from "lucide-react";
 import { Input } from "./ui/input";
@@ -111,7 +110,7 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     <div className="modal-overlay">
       <div 
         ref={dialogRef}
-        className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden animate-fade-in"
+        className="modal-content bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden animate-fade-in"
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="text-lg font-medium">Add Bookmark</h3>
