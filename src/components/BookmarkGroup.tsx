@@ -36,11 +36,12 @@ const BookmarkGroup = ({
   const [newName, setNewName] = useState(group.name);
   const [isHovered, setIsHovered] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
   
   // Make the group draggable
   const [{ isDragging }, drag] = useDrag({
     type: "GROUP",
-    item: { index },
+    item: { index, type: "GROUP", id: group.id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -65,6 +66,32 @@ const BookmarkGroup = ({
       // Don't replace items with themselves
       if (dragIndex === hoverIndex) return;
       
+      // Get rectangle on screen
+      if (!groupRef.current) return;
+      const hoverBoundingRect = groupRef.current.getBoundingClientRect();
+      
+      // Get vertical middle
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      
+      // Get mouse position
+      const clientOffset = monitor.getClientOffset();
+      if (!clientOffset) return;
+      
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      
+      // Only perform the move when the mouse has crossed half of the items height
+      
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      
       // Time to actually perform the action
       onMoveGroup(dragIndex, hoverIndex);
       
@@ -78,6 +105,9 @@ const BookmarkGroup = ({
       isOver: monitor.isOver(),
     }),
   });
+
+  // Connect drag and drop refs
+  drag(drop(groupRef));
 
   const filteredBookmarks = bookmarks.filter(
     (bookmark) => bookmark.groupId === group.id
@@ -99,16 +129,11 @@ const BookmarkGroup = ({
     }
   };
 
-  // Set up the ref as both drag source and drop target
-  const groupRef = (node: HTMLDivElement | null) => {
-    drag(drop(node));
-  };
-
   return (
     <div 
       ref={groupRef} 
       className={cn(
-        "mb-6 w-full fade-in",
+        "mb-6 w-full fade-in cursor-grab",
         isOver && "ring-2 ring-blue-300 bg-slate-50/80",
         isDragging && "opacity-50"
       )}
@@ -116,12 +141,12 @@ const BookmarkGroup = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-center mb-3">
-        <button
+        <div
           onClick={() => setIsExpanded(!isExpanded)}
-          className="mr-2 text-gray-500 hover:text-gray-700 transition-colors cursor-grab"
+          className="mr-2 text-gray-500 hover:text-gray-700 transition-colors"
         >
           {isExpanded ? <FolderOpen size={18} /> : <FolderClosed size={18} />}
-        </button>
+        </div>
         
         {isEditing ? (
           <input

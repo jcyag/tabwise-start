@@ -56,8 +56,8 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
       ref={drag}
       className={`animate-slide-in ${isDragging ? "opacity-50" : ""}`}
     >
-      <button
-        className="w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item"
+      <div
+        className="w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item cursor-pointer"
         style={{ maxWidth: "120px", height: "auto", minHeight: "60px" }}
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -114,7 +114,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
             </button>
           </div>
         )}
-      </button>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -17,12 +16,10 @@ const BookmarkSection = () => {
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
-  // On component mount, load bookmarks and groups from storage (localStorage for now)
   useEffect(() => {
     const loadedBookmarks = localStorage.getItem("bookmarks");
     const loadedGroups = localStorage.getItem("bookmarkGroups");
 
-    // Initialize with default groups if none exist
     if (!loadedGroups) {
       const defaultGroups: BookmarkGroupType[] = [
         { id: "default", name: "General" },
@@ -35,13 +32,11 @@ const BookmarkSection = () => {
       setGroups(JSON.parse(loadedGroups));
     }
 
-    // Load bookmarks or initialize with empty array
     if (loadedBookmarks) {
       setBookmarks(JSON.parse(loadedBookmarks));
     }
   }, []);
 
-  // Save to local storage whenever bookmarks or groups change
   useEffect(() => {
     if (bookmarks.length > 0) {
       localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
@@ -107,7 +102,6 @@ const BookmarkSection = () => {
   };
 
   const handleDeleteGroup = (id: string) => {
-    // Delete the group and all bookmarks in it
     const groupToDelete = groups.find(group => group.id === id);
     setGroups(groups.filter(group => group.id !== id));
     setBookmarks(bookmarks.filter(bookmark => bookmark.groupId !== id));
@@ -135,14 +129,11 @@ const BookmarkSection = () => {
   };
 
   const handleMoveGroup = (dragIndex: number, hoverIndex: number) => {
-    // Create new array to avoid mutating state directly
     const newGroups = [...groups];
-    // Remove the dragged item
     const draggedGroup = newGroups.splice(dragIndex, 1)[0];
-    // Insert it at the new position
     newGroups.splice(hoverIndex, 0, draggedGroup);
-    // Update state
     setGroups(newGroups);
+    localStorage.setItem("bookmarkGroups", JSON.stringify(newGroups));
   };
 
   return (
@@ -178,7 +169,6 @@ const BookmarkSection = () => {
           />
         ))}
 
-        {/* Add dialogs */}
         <AddBookmarkDialog
           isOpen={isAddingBookmark}
           onClose={() => setIsAddingBookmark(false)}
