@@ -17,5 +17,16 @@
     "16": "favicon.ico",
     "48": "favicon.ico",
     "128": "favicon.ico"
+  },
+  "action": {
+    "default_icon": {
+      "16": "favicon.ico",
+      "48": "favicon.ico",
+      "128": "favicon.ico"
+    },
+    "default_title": "Elegant New Tab"
+  },
+  "background": {
+    "service_worker": "background.js"
   }
 }
