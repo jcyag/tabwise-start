@@ -38,7 +38,7 @@ const NameInput = ({ name, onChange }: NameInputProps) => {
           id="name"
           value={inputValue}
           onChange={handleInputChange}
-          className="w-full pl-10 pr-4 py-2"
+          className="w-full pl-10 pr-4"
           placeholder="Bookmark name"
         />
       </div>

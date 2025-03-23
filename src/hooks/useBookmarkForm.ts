@@ -18,11 +18,12 @@ export const useBookmarkForm = () => {
           urlToValidate = "http://" + url;
         }
         
-        // Use the validateUrl helper function
+        // Validate URL
         const valid = validateUrl(urlToValidate);
         setIsValid(valid);
         
-        if (valid && url !== "" && name === "" && !userEditedName) {
+        // Only try to extract name if URL is valid and name hasn't been edited
+        if (valid && url.trim() !== "" && name === "" && !userEditedName) {
           setIsFetching(true);
           
           try {
@@ -33,7 +34,6 @@ export const useBookmarkForm = () => {
               setName(siteName);
             }
           } catch (e) {
-            // If extraction fails, leave name empty
             console.log("Failed to extract domain:", e);
           }
           
