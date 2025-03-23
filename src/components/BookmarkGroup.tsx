@@ -136,9 +136,6 @@ const BookmarkGroup = ({
     accept: "BOOKMARK",
     hover: (item: any, monitor) => {
       if (item.type !== "BOOKMARK" || item.groupId !== group.id) return;
-      
-      // We don't need any hover behavior for cross-group drops,
-      // that's handled by the main drop handler
     }
   });
 
@@ -214,6 +211,7 @@ const BookmarkGroup = ({
                   onDelete={onDeleteBookmark}
                   onEdit={onEditBookmark}
                   index={bookmarkIndex}
+                  onMoveBookmark={onMoveBookmark}
                 />
               ))}
             </div>

@@ -137,29 +137,56 @@ const BookmarkSection = () => {
     localStorage.setItem("bookmarkGroups", JSON.stringify(newGroups));
   };
 
-  // Add a new function to handle bookmark reordering within a group
+  // Function to handle bookmark reordering within a group
   const handleMoveBookmark = (dragIndex: number, hoverIndex: number, groupId: string) => {
-    // Get all bookmarks in this group
+    // Get all bookmarks for this group
     const groupBookmarks = bookmarks
-      .filter(bookmark => bookmark.groupId === groupId)
-      .sort((a, b) => {
-        // Sort by order in the array
-        const aIndex = bookmarks.findIndex(item => item.id === a.id);
-        const bIndex = bookmarks.findIndex(item => item.id === b.id);
-        return aIndex - bIndex;
-      });
+      .filter(bookmark => bookmark.groupId === groupId);
     
-    // Move the bookmark within this array
-    const draggedBookmark = groupBookmarks.splice(dragIndex, 1)[0];
-    groupBookmarks.splice(hoverIndex, 0, draggedBookmark);
+    // If there are less than 2 bookmarks, no need to reorder
+    if (groupBookmarks.length < 2) return;
     
-    // Create a new bookmarks array with the updated order
-    const otherBookmarks = bookmarks.filter(bookmark => bookmark.groupId !== groupId);
-    const newBookmarks = [...otherBookmarks, ...groupBookmarks];
+    // Create a new array of bookmarks with the updated order
+    const newBookmarks = [...bookmarks];
     
-    // Update the state and localStorage
-    setBookmarks(newBookmarks);
-    localStorage.setItem("bookmarks", JSON.stringify(newBookmarks));
+    // Find the actual indices in the main bookmarks array
+    const allGroupIndices = bookmarks
+      .map((bookmark, index) => bookmark.groupId === groupId ? index : -1)
+      .filter(index => index !== -1);
+    
+    if (dragIndex >= allGroupIndices.length || hoverIndex >= allGroupIndices.length) {
+      return; // Invalid indices
+    }
+    
+    // Get the actual bookmark objects
+    const dragBookmark = bookmarks[allGroupIndices[dragIndex]];
+    
+    // Remove the dragged bookmark from array
+    const updatedBookmarks = newBookmarks.filter(b => b.id !== dragBookmark.id);
+    
+    // Calculate the insert position
+    let insertAt;
+    if (hoverIndex === 0) {
+      // Insert at the beginning of the group
+      insertAt = allGroupIndices[0];
+    } else if (hoverIndex >= allGroupIndices.length) {
+      // Insert at the end
+      insertAt = bookmarks.length;
+    } else {
+      // Insert at the correct position
+      insertAt = allGroupIndices[hoverIndex];
+      // Adjust for removal of dragged item
+      if (dragIndex < hoverIndex) {
+        insertAt--;
+      }
+    }
+    
+    // Insert the bookmark at the new position
+    updatedBookmarks.splice(insertAt, 0, dragBookmark);
+    
+    // Update state and localStorage
+    setBookmarks(updatedBookmarks);
+    localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
   };
 
   return (
