@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface HistoryItem {
   id: string;
@@ -13,64 +14,91 @@ interface HistoryItem {
 const RecentHistory = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    // Simulate Chrome extension API for history since we're in a web environment
     const fetchHistory = async () => {
       try {
-        // In a real Chrome extension, we would use chrome.history.search
-        // For now, we'll simulate with placeholder data
-        const mockHistory: HistoryItem[] = [
-          {
-            id: "1",
-            url: "https://google.com",
-            title: "Google",
-            favicon: "https://www.google.com/favicon.ico",
-            lastVisitTime: Date.now() - 1000 * 60 * 5
-          },
-          {
-            id: "2",
-            url: "https://github.com",
-            title: "GitHub",
-            favicon: "https://github.com/favicon.ico",
-            lastVisitTime: Date.now() - 1000 * 60 * 10
-          },
-          {
-            id: "3",
-            url: "https://youtube.com",
-            title: "YouTube",
-            favicon: "https://www.youtube.com/favicon.ico",
-            lastVisitTime: Date.now() - 1000 * 60 * 15
-          },
-          {
-            id: "4",
-            url: "https://netflix.com",
-            title: "Netflix",
-            favicon: "https://www.netflix.com/favicon.ico",
-            lastVisitTime: Date.now() - 1000 * 60 * 30
-          },
-          {
-            id: "5",
-            url: "https://twitter.com",
-            title: "Twitter",
-            favicon: "https://twitter.com/favicon.ico",
-            lastVisitTime: Date.now() - 1000 * 60 * 45
-          },
-          {
-            id: "6",
-            url: "https://facebook.com",
-            title: "Facebook",
-            favicon: "https://www.facebook.com/favicon.ico",
-            lastVisitTime: Date.now() - 1000 * 60 * 60
-          }
-        ];
-        
-        setTimeout(() => {
-          setHistory(mockHistory);
-          setLoading(false);
-        }, 300); // Simulating network delay
+        // Check if we're in a Chrome extension environment
+        if (typeof chrome !== 'undefined' && chrome.history) {
+          // We're in a Chrome extension, use the actual API
+          chrome.history.search(
+            { text: '', maxResults: 6, startTime: 0 },
+            (historyItems) => {
+              const processedItems: HistoryItem[] = historyItems.map((item) => ({
+                id: item.id || String(Math.random()),
+                url: item.url || "",
+                title: item.title || "Unknown",
+                favicon: `https://www.google.com/s2/favicons?domain=${new URL(item.url || "").hostname}`,
+                lastVisitTime: item.lastVisitTime || Date.now(),
+              }));
+              
+              setHistory(processedItems);
+              setLoading(false);
+            }
+          );
+        } else {
+          // We're in a regular web environment, use mock data
+          console.log("Chrome history API not available, using mock data");
+          
+          // Mock history data for development/preview
+          const mockHistory: HistoryItem[] = [
+            {
+              id: "1",
+              url: "https://google.com",
+              title: "Google",
+              favicon: "https://www.google.com/favicon.ico",
+              lastVisitTime: Date.now() - 1000 * 60 * 5
+            },
+            {
+              id: "2",
+              url: "https://github.com",
+              title: "GitHub",
+              favicon: "https://github.com/favicon.ico",
+              lastVisitTime: Date.now() - 1000 * 60 * 10
+            },
+            {
+              id: "3",
+              url: "https://youtube.com",
+              title: "YouTube",
+              favicon: "https://www.youtube.com/favicon.ico",
+              lastVisitTime: Date.now() - 1000 * 60 * 15
+            },
+            {
+              id: "4",
+              url: "https://netflix.com",
+              title: "Netflix",
+              favicon: "https://www.netflix.com/favicon.ico",
+              lastVisitTime: Date.now() - 1000 * 60 * 30
+            },
+            {
+              id: "5",
+              url: "https://twitter.com",
+              title: "Twitter",
+              favicon: "https://twitter.com/favicon.ico",
+              lastVisitTime: Date.now() - 1000 * 60 * 45
+            },
+            {
+              id: "6",
+              url: "https://facebook.com",
+              title: "Facebook",
+              favicon: "https://www.facebook.com/favicon.ico",
+              lastVisitTime: Date.now() - 1000 * 60 * 60
+            }
+          ];
+          
+          setTimeout(() => {
+            setHistory(mockHistory);
+            setLoading(false);
+          }, 300); // Simulating network delay
+        }
       } catch (error) {
         console.error("Error fetching history:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load browsing history",
+          variant: "destructive",
+        });
         setLoading(false);
       }
     };

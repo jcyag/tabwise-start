@@ -59,3 +59,18 @@ export const postMessageToIframes = (message: any): void => {
     console.error('Error in postMessageToIframes:', e);
   }
 };
+
+// Safely get favicon URL for a domain
+export const getFaviconUrl = (url: string): string => {
+  try {
+    const domain = extractDomain(url);
+    return `https://www.google.com/s2/favicons?domain=${domain}`;
+  } catch (e) {
+    return 'https://www.google.com/favicon.ico'; // Default favicon
+  }
+};
+
+// Check if running in Chrome extension context
+export const isExtensionContext = (): boolean => {
+  return typeof chrome !== 'undefined' && !!chrome.extension;
+};
