@@ -3,6 +3,7 @@ import * as React from "react";
 import { Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FolderPlus, Pencil } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BookmarkHeaderProps {
   onAddGroup: () => void;
@@ -11,14 +12,16 @@ interface BookmarkHeaderProps {
 }
 
 const BookmarkHeader = ({ onAddGroup, toggleEditMode, isEditMode }: BookmarkHeaderProps) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="flex items-center justify-between mb-4 w-full">
+    <div className="flex items-center justify-between mb-4 w-full hover-trigger group">
       <div className="flex items-center">
         <Bookmark size={20} className="mr-2 text-gray-600" />
         <h2 className="text-lg font-medium text-gray-700">Bookmarks</h2>
       </div>
       
-      <div className="flex items-center space-x-2">
+      <div className={`flex items-center space-x-2 transition-opacity duration-200 ${isMobile ? "" : "opacity-0 group-hover:opacity-100"}`}>
         <Button 
           variant="ghost" 
           size="sm" 
