@@ -19,9 +19,10 @@ export const useBookmarkForm = () => {
         }
         
         // Use the validateUrl helper function
-        setIsValid(validateUrl(urlToValidate));
+        const valid = validateUrl(urlToValidate);
+        setIsValid(valid);
         
-        if (url !== "" && name === "" && !userEditedName && isValid) {
+        if (valid && url !== "" && name === "" && !userEditedName) {
           setIsFetching(true);
           
           try {
@@ -45,7 +46,7 @@ export const useBookmarkForm = () => {
       console.log("URL validation error:", e);
       setIsValid(false);
     }
-  }, [url, name, userEditedName, isValid]);
+  }, [url, name, userEditedName]);
 
   const handleUrlChange = (value: string) => {
     setUrl(value);

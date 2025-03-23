@@ -1,6 +1,7 @@
 
 import { Link } from "lucide-react";
 import { Input } from "../ui/input";
+import { useState, useEffect } from "react";
 
 interface UrlInputProps {
   url: string;
@@ -10,6 +11,21 @@ interface UrlInputProps {
 }
 
 const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
+  // Add local state to handle input value
+  const [inputValue, setInputValue] = useState(url);
+
+  // Update local state when prop changes
+  useEffect(() => {
+    setInputValue(url);
+  }, [url]);
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    onChange(newValue);
+  };
+
   return (
     <div className="mb-4">
       <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-1">
@@ -23,10 +39,10 @@ const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
           ref={inputRef}
           type="text"
           id="url"
-          value={url}
-          onChange={(e) => onChange(e.target.value)}
+          value={inputValue}
+          onChange={handleInputChange}
           className={`w-full pl-10 py-2 px-4 border ${
-            url && !isValid
+            inputValue && !isValid
               ? "border-red-300 focus:ring-red-200"
               : "border-gray-300 focus:ring-blue-200"
           } rounded-md focus:outline-none focus:ring-2 focus:border-transparent transition-colors`}
@@ -34,7 +50,7 @@ const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
           autoComplete="off"
         />
       </div>
-      {url && !isValid && (
+      {inputValue && !isValid && (
         <p className="mt-1 text-sm text-red-500">Please enter a valid URL</p>
       )}
     </div>
