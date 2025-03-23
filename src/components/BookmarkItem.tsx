@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Trash2, Edit } from "lucide-react";
 import { useDrag } from "react-dnd";
 import { Bookmark } from "../types";
@@ -8,20 +8,30 @@ interface BookmarkItemProps {
   bookmark: Bookmark;
   onDelete: (id: string) => void;
   onEdit: (id: string, newName: string) => void;
+  index: number;
 }
 
-const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
+const BookmarkItem = ({ bookmark, onDelete, onEdit, index }: BookmarkItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(bookmark.name);
   const [isHovered, setIsHovered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
     type: "BOOKMARK",
-    item: { id: bookmark.id, groupId: bookmark.groupId, type: "BOOKMARK" },
+    item: { 
+      id: bookmark.id, 
+      groupId: bookmark.groupId, 
+      type: "BOOKMARK", 
+      index 
+    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
+
+  // Connect the drag ref
+  drag(ref);
 
   const handleEdit = () => {
     if (newName.trim() !== "") {
@@ -53,7 +63,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
 
   return (
     <div
-      ref={drag}
+      ref={ref}
       className={`animate-slide-in ${isDragging ? "opacity-50" : ""}`}
     >
       <div
@@ -94,7 +104,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
         
         {isHovered && !isEditing && (
           <div className="flex justify-center space-x-1 mt-1">
-            <button
+            <div
               className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
@@ -102,8 +112,8 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
               }}
             >
               <Edit size={12} />
-            </button>
-            <button
+            </div>
+            <div
               className="text-gray-400 hover:text-red-500 p-0.5 rounded-full transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
@@ -111,7 +121,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
               }}
             >
               <Trash2 size={12} />
-            </button>
+            </div>
           </div>
         )}
       </div>

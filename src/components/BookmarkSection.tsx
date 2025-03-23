@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -136,6 +137,31 @@ const BookmarkSection = () => {
     localStorage.setItem("bookmarkGroups", JSON.stringify(newGroups));
   };
 
+  // Add a new function to handle bookmark reordering within a group
+  const handleMoveBookmark = (dragIndex: number, hoverIndex: number, groupId: string) => {
+    // Get all bookmarks in this group
+    const groupBookmarks = bookmarks
+      .filter(bookmark => bookmark.groupId === groupId)
+      .sort((a, b) => {
+        // Sort by order in the array
+        const aIndex = bookmarks.findIndex(item => item.id === a.id);
+        const bIndex = bookmarks.findIndex(item => item.id === b.id);
+        return aIndex - bIndex;
+      });
+    
+    // Move the bookmark within this array
+    const draggedBookmark = groupBookmarks.splice(dragIndex, 1)[0];
+    groupBookmarks.splice(hoverIndex, 0, draggedBookmark);
+    
+    // Create a new bookmarks array with the updated order
+    const otherBookmarks = bookmarks.filter(bookmark => bookmark.groupId !== groupId);
+    const newBookmarks = [...otherBookmarks, ...groupBookmarks];
+    
+    // Update the state and localStorage
+    setBookmarks(newBookmarks);
+    localStorage.setItem("bookmarks", JSON.stringify(newBookmarks));
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="w-full max-w-3xl mx-auto fade-in">
@@ -166,6 +192,7 @@ const BookmarkSection = () => {
             onDropBookmark={handleDropBookmark}
             index={index}
             onMoveGroup={handleMoveGroup}
+            onMoveBookmark={handleMoveBookmark}
           />
         ))}
 

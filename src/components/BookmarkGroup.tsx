@@ -17,6 +17,7 @@ interface BookmarkGroupProps {
   onDropBookmark: (bookmarkId: string, targetGroupId: string) => void;
   index: number;
   onMoveGroup: (dragIndex: number, hoverIndex: number) => void;
+  onMoveBookmark: (dragIndex: number, hoverIndex: number, groupId: string) => void;
 }
 
 const BookmarkGroup = ({
@@ -30,6 +31,7 @@ const BookmarkGroup = ({
   onDropBookmark,
   index,
   onMoveGroup,
+  onMoveBookmark,
 }: BookmarkGroupProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -51,7 +53,7 @@ const BookmarkGroup = ({
   const [{ isOver }, drop] = useDrop({
     accept: ["BOOKMARK", "GROUP"],
     drop: (item: any) => {
-      if (item.type === "BOOKMARK") {
+      if (item.type === "BOOKMARK" && item.groupId !== group.id) {
         onDropBookmark(item.id, group.id);
       }
       return undefined;
@@ -129,6 +131,17 @@ const BookmarkGroup = ({
     }
   };
 
+  // Create a drop target for sorting bookmarks within this group
+  const [, bookmarksDrop] = useDrop({
+    accept: "BOOKMARK",
+    hover: (item: any, monitor) => {
+      if (item.type !== "BOOKMARK" || item.groupId !== group.id) return;
+      
+      // We don't need any hover behavior for cross-group drops,
+      // that's handled by the main drop handler
+    }
+  });
+
   return (
     <div 
       ref={groupRef} 
@@ -191,15 +204,16 @@ const BookmarkGroup = ({
       </div>
       
       {isExpanded && (
-        <div className="animate-slide-in">
+        <div className="animate-slide-in" ref={bookmarksDrop}>
           {filteredBookmarks.length > 0 ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
-              {filteredBookmarks.map((bookmark, index) => (
+              {filteredBookmarks.map((bookmark, bookmarkIndex) => (
                 <BookmarkItem
                   key={bookmark.id}
                   bookmark={bookmark}
                   onDelete={onDeleteBookmark}
                   onEdit={onEditBookmark}
+                  index={bookmarkIndex}
                 />
               ))}
             </div>
