@@ -91,8 +91,8 @@ const SearchBar = () => {
             query: message
           };
           
-          // Send the message to the new window
-          tab.postMessage(messageEvent, '*' as WindowPostMessageOptions);
+          // Send the message to the new window - fix type error
+          tab.postMessage(messageEvent, '*');
           
           // Notify the user
           toast({
@@ -126,7 +126,7 @@ const SearchBar = () => {
           sourceWindow.postMessage({
             type: 'YUANBAO_QUERY',
             query: userQuery
-          }, '*' as WindowPostMessageOptions);
+          }, '*');
           
           // Clean up the event listener after use
           window.removeEventListener('message', yuanbaoMessageHandler);
