@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { X, Folder } from "lucide-react";
 
@@ -17,6 +18,18 @@ const AddGroupDialog = ({ isOpen, onClose, onAdd }: AddGroupDialogProps) => {
     if (isOpen && nameInputRef.current) {
       nameInputRef.current.focus();
     }
+    
+    if (isOpen) {
+      // Prevent body scrolling when modal is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scrolling when modal is closed
+      document.body.style.overflow = "";
+    }
+    
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   useEffect(() => {

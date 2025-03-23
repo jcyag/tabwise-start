@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { X, Link, Edit } from "lucide-react";
 import { Input } from "./ui/input";
@@ -28,7 +29,16 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
       setUrl("");
       setName("");
       setUserEditedName(false);
+      // Prevent body scrolling when modal is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scrolling when modal is closed
+      document.body.style.overflow = "";
     }
+    
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   useEffect(() => {

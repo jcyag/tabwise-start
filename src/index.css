@@ -151,7 +151,7 @@
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* Modal overlay style */
+/* Modal overlay style - completely revised */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -160,17 +160,22 @@
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
-  z-index: 9999;
+  z-index: 50000;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Ensure modal always appears on top */
+/* Ensure modal content always appears on top */
 .modal-content {
   position: relative;
-  z-index: 10000;
+  z-index: 50001;
+  max-height: 90vh;
+  max-width: 90vw;
 }
