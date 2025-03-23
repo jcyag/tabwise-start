@@ -3,43 +3,26 @@
 
 这是一个美观的新标签页扩展，提供搜索栏、最近浏览历史和书签管理功能。
 
-## 快速安装（推荐）
+## 直接安装方式
 
-### 1. 构建并打包扩展
+### 运行脚本创建扩展包
 
 ```bash
-# 安装所有依赖
-npm install
-
-# 安装archiver包（用于创建zip文件）
-npm install archiver
-
-# 构建并打包扩展
+# 直接运行脚本创建扩展包
 node build-extension.js
 ```
 
-### 2. 在Chrome中安装扩展
+如果出现错误提示找不到 archiver 模块，请先安装：
 
-方法一：直接安装zip
+```bash
+npm install archiver
+```
+
+### 在Chrome中安装扩展
+
 1. 打开Chrome浏览器，访问 chrome://extensions/
 2. 开启右上角的"开发者模式"
 3. 将生成的 `elegant-new-tab.zip` 文件直接拖放到Chrome扩展页面
-
-方法二：加载文件夹
-1. 打开Chrome浏览器
-2. 在地址栏输入 `chrome://extensions/` 并访问
-3. 在右上角启用"开发者模式"
-4. 点击"加载已解压的扩展程序"按钮
-5. 选择项目的 `dist` 目录
-6. 扩展将被安装到Chrome浏览器中
-
-### 3. 使用扩展
-
-安装后，每次打开新标签页时将显示Elegant New Tab页面：
-
-- 在顶部搜索栏搜索网页
-- 查看最近的浏览历史
-- 管理和组织您的书签
 
 ## 功能
 
@@ -50,4 +33,12 @@ node build-extension.js
 
 ## 分享扩展
 
-想与他人分享此扩展，只需分享生成的 `elegant-new-tab.zip` 文件，让他们按照"方法一"进行安装。
+想与他人分享此扩展，只需分享生成的 `elegant-new-tab.zip` 文件，让他们按照安装说明进行安装即可。
+
+## 注意事项
+
+如果在运行脚本时遇到问题：
+- 确保Node.js已正确安装
+- 确保已安装archiver模块：`npm install archiver`
+- 确保文件路径正确，脚本文件位于项目根目录
+
