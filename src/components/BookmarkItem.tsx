@@ -54,26 +54,26 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
   return (
     <div
       ref={drag}
-      className={`glass-morphism rounded-lg p-2.5 transition-all bookmark-item ${
+      className={`glass-morphism rounded-lg p-2 transition-all bookmark-item ${
         isDragging ? "opacity-50" : ""
       }`}
       style={{ 
         opacity: isDragging ? 0.5 : 1,
-        maxWidth: "180px", // Set a max-width to make bookmarks more compact
+        maxWidth: "120px", // Slightly reduced max-width for vertical layout
         width: "auto"
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div 
-        className="flex items-center relative"
+        className="flex flex-col items-center relative"
         onClick={handleClick}
       >
-        <div className="mr-2 flex-shrink-0">
+        <div className="mb-1.5 flex-shrink-0">
           <img
             src={getFaviconUrl(bookmark.url)}
             alt=""
-            className="w-5 h-5 rounded-sm object-contain"
+            className="w-6 h-6 rounded-sm object-contain"
             onError={(e) => {
               // Fallback if favicon doesn't load
               (e.target as HTMLImageElement).src = "https://via.placeholder.com/64?text=🔖";
@@ -88,18 +88,18 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
             onChange={(e) => setNewName(e.target.value)}
             onBlur={handleEdit}
             onKeyDown={handleKeyDown}
-            className="flex-1 text-xs rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-300"
+            className="w-full text-xs rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-300"
             autoFocus
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <span className="flex-1 text-xs text-gray-700 truncate">
+          <span className="text-xs text-gray-700 text-center truncate w-full">
             {bookmark.name}
           </span>
         )}
 
         {isHovered && !isEditing && (
-          <div className="flex space-x-0.5 ml-1 absolute right-0 bg-white/80 rounded-full">
+          <div className="flex space-x-0.5 mt-1 absolute -bottom-6 bg-white/80 rounded-full">
             <button
               className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
               onClick={(e) => {
