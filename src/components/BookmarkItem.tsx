@@ -54,12 +54,12 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
   return (
     <div
       ref={drag}
-      className={`glass-morphism rounded-lg p-2 transition-all bookmark-item ${
+      className={`glass-morphism rounded-lg p-3 transition-all bookmark-item ${
         isDragging ? "opacity-50" : ""
       }`}
       style={{ 
         opacity: isDragging ? 0.5 : 1,
-        maxWidth: "120px", // Slightly reduced max-width for vertical layout
+        maxWidth: "120px",
         width: "auto"
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -67,9 +67,8 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
     >
       <div 
         className="flex flex-col items-center relative"
-        onClick={handleClick}
       >
-        <div className="mb-1.5 flex-shrink-0">
+        <div className="mb-1.5 flex-shrink-0" onClick={handleClick}>
           <img
             src={getFaviconUrl(bookmark.url)}
             alt=""
@@ -93,31 +92,36 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <span className="text-xs text-gray-700 text-center truncate w-full">
-            {bookmark.name}
-          </span>
-        )}
-
-        {isHovered && !isEditing && (
-          <div className="flex space-x-0.5 mt-1 absolute -bottom-6 bg-white/80 rounded-full">
-            <button
-              className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsEditing(true);
-              }}
+          <div className="w-full">
+            <span 
+              className="text-xs text-gray-700 text-center truncate w-full block cursor-pointer" 
+              onClick={handleClick}
             >
-              <Edit size={12} />
-            </button>
-            <button
-              className="text-gray-400 hover:text-red-500 p-0.5 rounded-full transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(bookmark.id);
-              }}
-            >
-              <Trash2 size={12} />
-            </button>
+              {bookmark.name}
+            </span>
+            
+            {isHovered && !isEditing && (
+              <div className="flex justify-center space-x-1 mt-1.5">
+                <button
+                  className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                >
+                  <Edit size={12} />
+                </button>
+                <button
+                  className="text-gray-400 hover:text-red-500 p-0.5 rounded-full transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(bookmark.id);
+                  }}
+                >
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
