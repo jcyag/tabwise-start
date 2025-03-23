@@ -128,7 +128,7 @@ const BookmarkGroup = ({
       {isExpanded && (
         <div className="animate-slide-in">
           {filteredBookmarks.length > 0 ? (
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2.5">
               {filteredBookmarks.map((bookmark) => (
                 <BookmarkItem
                   key={bookmark.id}
