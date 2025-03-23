@@ -5,7 +5,6 @@ import { Bookmark } from "../types";
 import BookmarkActions from "./bookmark/BookmarkActions";
 import BookmarkFavicon from "./bookmark/BookmarkFavicon";
 import BookmarkTitle from "./bookmark/BookmarkTitle";
-import DraggableBookmark from "./bookmark/DraggableBookmark";
 
 interface BookmarkItemProps {
   bookmark: Bookmark;
@@ -130,11 +129,12 @@ const BookmarkItem = ({
   };
 
   const handleClick = () => {
-    if (!isEditing) {
+    if (!isEditing && !isEditMode) {
       window.open(bookmark.url, "_blank");
     }
   };
 
+  // Always show actions in edit mode, or when hovered (and not editing)
   const showActions = isEditMode || (isHovered && !isEditing);
 
   return (
@@ -146,7 +146,7 @@ const BookmarkItem = ({
       <div
         className={`w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item cursor-pointer ${isEditMode ? 'ring-1 ring-blue-300' : ''}`}
         style={{ maxWidth: "120px", height: "auto", minHeight: "60px" }}
-        onClick={!isEditMode ? handleClick : undefined}
+        onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
