@@ -67,43 +67,41 @@ const BookmarkGroup = ({
     <div 
       ref={drop} 
       className={cn(
-        "mb-6 glass-morphism p-4 rounded-lg transition-all transform group-fade",
+        "mb-6 w-full fade-in",
         isOver && "ring-2 ring-blue-300 bg-slate-50/80"
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="mr-2 text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            {isExpanded ? <FolderOpen size={20} /> : <FolderClosed size={20} />}
-          </button>
-          
-          {isEditing ? (
-            <input
-              ref={inputRef}
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              onBlur={handleSubmit}
-              onKeyDown={handleKeyDown}
-              className="text-base font-medium p-1 rounded border focus:outline-none focus:ring-1 focus:ring-blue-300"
-              autoFocus
-            />
-          ) : (
-            <h3 
-              className="text-base font-medium text-gray-700 cursor-pointer"
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {group.name}
-            </h3>
-          )}
-        </div>
+      <div className="flex items-center mb-3">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mr-2 text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          {isExpanded ? <FolderOpen size={18} /> : <FolderClosed size={18} />}
+        </button>
         
-        <div className={`flex space-x-1 transition-opacity ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+        {isEditing ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            onBlur={handleSubmit}
+            onKeyDown={handleKeyDown}
+            className="text-base font-medium p-1 rounded border focus:outline-none focus:ring-1 focus:ring-blue-300"
+            autoFocus
+          />
+        ) : (
+          <h2 
+            className="text-base font-medium text-gray-600 cursor-pointer"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {group.name}
+          </h2>
+        )}
+        
+        <div className={`flex space-x-1 ml-auto transition-opacity ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
           <button
             className="text-gray-400 hover:text-gray-600 p-1 rounded-full transition-colors"
             onClick={() => setIsEditing(true)}
@@ -129,7 +127,7 @@ const BookmarkGroup = ({
         <div className="animate-slide-in">
           {filteredBookmarks.length > 0 ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
-              {filteredBookmarks.map((bookmark) => (
+              {filteredBookmarks.map((bookmark, index) => (
                 <BookmarkItem
                   key={bookmark.id}
                   bookmark={bookmark}
