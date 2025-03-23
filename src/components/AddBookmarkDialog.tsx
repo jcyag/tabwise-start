@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { X, Link, Edit } from "lucide-react";
 import { Input } from "./ui/input";
@@ -25,7 +24,6 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
       urlInputRef.current.focus();
     }
     
-    // Reset states when dialog opens
     if (isOpen) {
       setUrl("");
       setName("");
@@ -50,10 +48,8 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    // Validate URL as user types
     try {
       if (url) {
-        // Add http:// if missing
         let urlToValidate = url;
         if (!/^https?:\/\//i.test(url)) {
           urlToValidate = "http://" + url;
@@ -62,17 +58,13 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
         new URL(urlToValidate);
         setIsValid(true);
         
-        // Try to fetch page title if URL is valid and user hasn't edited the name
         if (url !== "" && name === "" && !userEditedName) {
           setIsFetching(true);
           
-          // In a real extension, we would use chrome APIs to get page info
-          // For the demo, we'll extract domain name as title
           try {
             const domain = new URL(urlToValidate).hostname.replace("www.", "");
             const domainParts = domain.split(".");
             if (domainParts.length > 0) {
-              // Capitalize the first letter of the domain name
               const siteName = domainParts[0].charAt(0).toUpperCase() + domainParts[0].slice(1);
               setName(siteName);
             }
@@ -95,7 +87,6 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     
     if (!isValid) return;
     
-    // Ensure URL has protocol
     let finalUrl = url;
     if (!/^https?:\/\//i.test(finalUrl)) {
       finalUrl = "http://" + finalUrl;
@@ -103,7 +94,6 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     
     onAdd(finalUrl, name || new URL(finalUrl).hostname);
     
-    // Reset form
     setUrl("");
     setName("");
     setUserEditedName(false);
@@ -117,7 +107,7 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 backdrop-blur-sm" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}>
+    <div className="modal-overlay flex items-center justify-center">
       <div 
         ref={dialogRef}
         className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden animate-fade-in"
