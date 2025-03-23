@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { getFaviconUrl, isExtensionContext } from "@/utils/helpers";
+import { getFaviconUrl, isChromeHistoryAvailable } from "@/utils/helpers";
 
 interface HistoryItem {
   id: string;
@@ -19,9 +20,10 @@ const RecentHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        // Check if we're in a Chrome extension environment with history API
-        if (typeof chrome !== 'undefined' && chrome.history) {
-          // We're in a Chrome extension, use the actual API
+        // Check if Chrome history API is available
+        if (isChromeHistoryAvailable()) {
+          console.log("Chrome history API available, fetching real data");
+          // We're in a Chrome extension with history permission, use the actual API
           chrome.history.search(
             { text: '', maxResults: 6, startTime: 0 },
             (historyItems) => {

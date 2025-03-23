@@ -72,5 +72,14 @@ export const getFaviconUrl = (url: string): string => {
 
 // Check if running in Chrome extension context
 export const isExtensionContext = (): boolean => {
-  return typeof chrome !== 'undefined' && !!chrome.extension;
+  return typeof chrome !== 'undefined' && 
+         chrome !== null && 
+         chrome.extension !== undefined;
+};
+
+// Check if Chrome history API is available
+export const isChromeHistoryAvailable = (): boolean => {
+  return typeof chrome !== 'undefined' && 
+         chrome !== null && 
+         chrome.history !== undefined;
 };
