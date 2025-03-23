@@ -92,7 +92,7 @@ const SearchBar = () => {
           };
           
           // Send the message to the new window
-          tab.postMessage(messageEvent, '*');
+          tab.postMessage(messageEvent, '*' as WindowPostMessageOptions);
           
           // Notify the user
           toast({
@@ -122,10 +122,11 @@ const SearchBar = () => {
       // Add a message listener to allow communication with the Yuanbao page
       window.addEventListener('message', function yuanbaoMessageHandler(event) {
         if (event.data && event.data.type === 'YUANBAO_READY') {
-          event.source?.postMessage({
+          const sourceWindow = event.source as Window;
+          sourceWindow.postMessage({
             type: 'YUANBAO_QUERY',
             query: userQuery
-          }, '*');
+          }, '*' as WindowPostMessageOptions);
           
           // Clean up the event listener after use
           window.removeEventListener('message', yuanbaoMessageHandler);
