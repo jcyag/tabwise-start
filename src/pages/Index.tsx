@@ -24,7 +24,7 @@ const Index = () => {
         <div className="absolute top-2/3 right-1/3 w-48 h-48 bg-blue-100 opacity-20 rounded-full blur-2xl"></div>
       </div>
       
-      <div className="container max-w-5xl mx-auto px-4 pt-4">
+      <div className="container max-w-3xl mx-auto px-4 pt-4">
         <div className="relative">
           {/* Search bar */}
           <div style={{ position: 'relative', zIndex: 100 }}>

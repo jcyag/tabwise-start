@@ -57,7 +57,11 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
       className={`glass-morphism rounded-lg p-3 transition-all bookmark-item ${
         isDragging ? "opacity-50" : ""
       }`}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      style={{ 
+        opacity: isDragging ? 0.5 : 1,
+        maxWidth: "60px", // Reduced from the implied wider width to half
+        width: "100%"
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

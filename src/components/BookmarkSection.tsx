@@ -125,7 +125,7 @@ const BookmarkSection = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="w-full max-w-4xl mx-auto fade-in">
+      <div className="w-full max-w-3xl mx-auto fade-in">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <Bookmark size={20} className="mr-2 text-gray-600" />
