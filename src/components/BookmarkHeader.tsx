@@ -21,7 +21,13 @@ const BookmarkHeader = ({ onAddGroup, toggleEditMode, isEditMode }: BookmarkHead
             <h2 className="text-lg font-medium text-gray-700">Bookmarks</h2>
           </div>
         </HoverCardTrigger>
-        <HoverCardContent side="right" align="start" className="p-2 flex space-x-2 border-0 shadow-md">
+        <HoverCardContent 
+          side="right" 
+          align="start" 
+          className="p-2 flex space-x-2 border-0 shadow-md mt-0" 
+          alignOffset={-12}
+          sideOffset={16}
+        >
           <Button 
             variant="outline" 
             size="sm" 
