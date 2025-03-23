@@ -119,12 +119,12 @@ const RecentHistory = () => {
           <Clock size={18} className="mr-2 text-gray-500" />
           <h2 className="text-base font-medium text-gray-600">Recent History</h2>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="animate-pulse">
-              <div className="glass-morphism rounded-lg p-3 flex flex-col items-center justify-center space-y-2 h-20">
-                <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
-                <div className="w-full h-3 bg-gray-200 rounded"></div>
+              <div className="glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-2 h-16">
+                <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+                <div className="w-full h-2 bg-gray-200 rounded"></div>
               </div>
             </div>
           ))}
@@ -139,7 +139,7 @@ const RecentHistory = () => {
         <Clock size={18} className="mr-2 text-gray-500" />
         <h2 className="text-base font-medium text-gray-600">Recent History</h2>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
         {history.map((item, index) => (
           <div 
             key={item.id}
@@ -148,13 +148,14 @@ const RecentHistory = () => {
           >
             <button
               onClick={() => navigateTo(item.url)}
-              className="w-full glass-morphism rounded-lg p-3 flex flex-col items-center justify-center space-y-2 hover:shadow-md transition-shadow bookmark-item"
+              className="w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item"
+              style={{ maxWidth: "120px", height: "auto", minHeight: "60px" }}
             >
               <div className="relative flex-shrink-0">
                 <img
                   src={item.favicon}
                   alt=""
-                  className="w-6 h-6 rounded-sm object-contain"
+                  className="w-5 h-5 rounded-sm object-contain"
                   onError={(e) => {
                     // If favicon fails to load, replace with a default icon
                     (e.target as HTMLImageElement).src = "https://www.google.com/s2/favicons?domain=" + item.url;

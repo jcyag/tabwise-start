@@ -54,10 +54,14 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
   return (
     <div
       ref={drag}
-      className={`glass-morphism rounded-lg p-3 transition-all bookmark-item ${
+      className={`glass-morphism rounded-lg p-2.5 transition-all bookmark-item ${
         isDragging ? "opacity-50" : ""
       }`}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      style={{ 
+        opacity: isDragging ? 0.5 : 1,
+        maxWidth: "180px", // Set a max-width to make bookmarks more compact
+        width: "auto"
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -65,11 +69,11 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
         className="flex items-center relative"
         onClick={handleClick}
       >
-        <div className="mr-3 flex-shrink-0">
+        <div className="mr-2 flex-shrink-0">
           <img
             src={getFaviconUrl(bookmark.url)}
             alt=""
-            className="w-6 h-6 rounded-sm object-contain"
+            className="w-5 h-5 rounded-sm object-contain"
             onError={(e) => {
               // Fallback if favicon doesn't load
               (e.target as HTMLImageElement).src = "https://via.placeholder.com/64?text=🔖";
@@ -84,35 +88,35 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
             onChange={(e) => setNewName(e.target.value)}
             onBlur={handleEdit}
             onKeyDown={handleKeyDown}
-            className="flex-1 text-sm rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-300"
+            className="flex-1 text-xs rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-300"
             autoFocus
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <span className="flex-1 text-sm text-gray-700 truncate">
+          <span className="flex-1 text-xs text-gray-700 truncate">
             {bookmark.name}
           </span>
         )}
 
         {isHovered && !isEditing && (
-          <div className="flex space-x-1 ml-2">
+          <div className="flex space-x-0.5 ml-1 absolute right-0 bg-white/80 rounded-full">
             <button
-              className="text-gray-400 hover:text-gray-600 p-1 rounded-full transition-colors"
+              className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsEditing(true);
               }}
             >
-              <Edit size={14} />
+              <Edit size={12} />
             </button>
             <button
-              className="text-gray-400 hover:text-red-500 p-1 rounded-full transition-colors"
+              className="text-gray-400 hover:text-red-500 p-0.5 rounded-full transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(bookmark.id);
               }}
             >
-              <Trash2 size={14} />
+              <Trash2 size={12} />
             </button>
           </div>
         )}
