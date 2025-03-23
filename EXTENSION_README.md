@@ -3,26 +3,33 @@
 
 这是一个美观的新标签页扩展，提供搜索栏、最近浏览历史和书签管理功能。
 
-## 直接安装方式
+## 简易安装方法
 
-### 运行脚本创建扩展包
-
-```bash
-# 直接运行脚本创建扩展包
-node build-extension.js
-```
-
-如果出现错误提示找不到 archiver 模块，请先安装：
+### 方法一：直接运行脚本（不需要npm）
 
 ```bash
-npm install archiver
+# 直接运行以下命令创建扩展包
+node simple-pack.js
 ```
+
+### 方法二：手动创建扩展包
+
+如果脚本运行出错，您可以手动创建扩展包：
+
+1. 创建一个新文件夹（例如`dist`）
+2. 复制以下文件到该文件夹：
+   - `public/manifest.json`
+   - `public/background.js`
+   - `public/favicon.ico`
+   - `public/index.html`
+3. 将整个`src`目录复制到该文件夹
+4. 压缩该文件夹为zip格式
 
 ### 在Chrome中安装扩展
 
-1. 打开Chrome浏览器，访问 chrome://extensions/
+1. 打开Chrome浏览器，访问 `chrome://extensions/`
 2. 开启右上角的"开发者模式"
-3. 将生成的 `elegant-new-tab.zip` 文件直接拖放到Chrome扩展页面
+3. 将生成的 `chrome-extension.zip` 文件直接拖放到Chrome扩展页面
 
 ## 功能
 
@@ -33,12 +40,11 @@ npm install archiver
 
 ## 分享扩展
 
-想与他人分享此扩展，只需分享生成的 `elegant-new-tab.zip` 文件，让他们按照安装说明进行安装即可。
+想与他人分享此扩展，只需分享生成的 `chrome-extension.zip` 文件，让他们按照安装说明进行安装即可。
 
-## 注意事项
+## 常见问题解决
 
-如果在运行脚本时遇到问题：
-- 确保Node.js已正确安装
-- 确保已安装archiver模块：`npm install archiver`
-- 确保文件路径正确，脚本文件位于项目根目录
-
+如果遇到"MODULE_NOT_FOUND"错误：
+- 确保使用的是Node.js版本14或更高版本
+- 尝试使用simple-pack.js脚本，它不依赖外部模块
+- 如果一切都失败了，请使用手动创建扩展包的方法
