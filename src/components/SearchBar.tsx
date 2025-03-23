@@ -39,10 +39,10 @@ const searchEngines: SearchEngine[] = [
     isLLM: true
   },
   {
-    name: "doubao",
-    label: "豆包",
-    url: "https://www.doubao.com/chat/",
-    placeholder: "豆包搜索...",
+    name: "perplexity",
+    label: "Perplexity",
+    url: "https://www.perplexity.ai/",
+    placeholder: "Ask Perplexity...",
     isLLM: true
   }
 ];
@@ -70,44 +70,19 @@ const SearchBar = () => {
       // Open ChatGPT with the query
       const chatGptUrl = `${engine.url}?q=${encodeURIComponent(userQuery)}`;
       window.open(chatGptUrl, "_blank");
-    } else if (engine.name === "doubao") {
-      // Generate a conversation ID using timestamp and random string
-      const timestamp = Date.now();
-      const randomStr = Math.random().toString(36).substring(2, 10);
-      const conversationId = `${timestamp}${randomStr}`;
+    } else if (engine.name === "perplexity") {
+      // Create the perplexity URL
+      const perplexityUrl = `${engine.url}search?q=${encodeURIComponent(userQuery)}`;
       
-      // Create the doubao URL
-      const doubaoUrl = `${engine.url}${conversationId}`;
+      // Open Perplexity in a new tab with the query
+      window.open(perplexityUrl, "_blank");
       
-      // Function to directly send a message to Doubao
-      const sendMessageToDoubao = async (tab: Window | null, message: string) => {
-        if (!tab) return;
-        
-        // Wait for the page to load
-        setTimeout(() => {
-          // Create a message event to send to the new window
-          const messageEvent = {
-            type: 'DOUBAO_AUTO_QUERY',
-            query: message
-          };
-          
-          // Send the message to the new window
-          tab.postMessage(messageEvent, '*');
-          
-          // Notify the user
-          toast({
-            title: "已发送到豆包",
-            description: "您的问题已自动发送至豆包对话框。",
-            duration: 5000,
-          });
-        }, 2000); // Wait 2 seconds for the page to load
-      };
-      
-      // Open Doubao in a new tab
-      const doubaoWindow = window.open(doubaoUrl, "_blank");
-      
-      // Send the message to Doubao
-      sendMessageToDoubao(doubaoWindow, userQuery);
+      // Notify the user
+      toast({
+        title: "已发送到 Perplexity",
+        description: "您的问题已自动发送至 Perplexity。",
+        duration: 3000,
+      });
       
       // Also copy the query to clipboard as a fallback
       navigator.clipboard.writeText(userQuery).catch(err => {
@@ -118,87 +93,6 @@ const SearchBar = () => {
           variant: "destructive",
         });
       });
-      
-      // Add a message listener to allow communication with the Doubao page
-      window.addEventListener('message', function doubaoMessageHandler(event) {
-        if (event.data && event.data.type === 'DOUBAO_READY') {
-          const sourceWindow = event.source as Window;
-          sourceWindow.postMessage({
-            type: 'DOUBAO_QUERY',
-            query: userQuery
-          }, '*');
-          
-          // Clean up the event listener after use
-          window.removeEventListener('message', doubaoMessageHandler);
-        }
-      });
-      
-      // Inject a script into the parent page to help with Doubao integration
-      const doubaoScript = document.createElement('script');
-      doubaoScript.id = 'doubao-integration';
-      doubaoScript.textContent = `
-        // This script will automatically try to click on the input field and add text when Doubao is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-          // Notify the parent window that Doubao is ready
-          window.opener && window.opener.postMessage({
-            type: 'DOUBAO_READY'
-          }, '*');
-          
-          // Listen for messages from the parent window
-          window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'DOUBAO_QUERY' || event.data.type === 'DOUBAO_AUTO_QUERY') {
-              // Try to find the input field and button
-              setTimeout(() => {
-                const inputFields = document.querySelectorAll('textarea, input[type="text"]');
-                const sendButtons = document.querySelectorAll('button');
-                
-                // Look for the chat input field
-                let inputField = null;
-                for (const field of inputFields) {
-                  if (field.placeholder && (field.placeholder.includes('输入') || 
-                      field.placeholder.includes('问题') || 
-                      field.placeholder.includes('聊天'))) {
-                    inputField = field;
-                    break;
-                  }
-                }
-                
-                // If we found an input field, set its value and try to submit
-                if (inputField) {
-                  inputField.value = event.data.query;
-                  inputField.dispatchEvent(new Event('input', { bubbles: true }));
-                  
-                  // Try to find and click the send button
-                  let sendButton = null;
-                  for (const button of sendButtons) {
-                    if (button.textContent && (button.textContent.includes('发送') || 
-                        button.textContent.includes('提问') || 
-                        button.textContent.includes('确认'))) {
-                      sendButton = button;
-                      break;
-                    }
-                  }
-                  
-                  if (sendButton) {
-                    setTimeout(() => {
-                      sendButton.click();
-                    }, 300);
-                  }
-                }
-              }, 1500);
-            }
-          });
-        });
-      `;
-      
-      // Append the script to help with Doubao integration
-      document.body.appendChild(doubaoScript);
-      
-      // Clean up after a delay
-      setTimeout(() => {
-        const script = document.getElementById('doubao-integration');
-        if (script) script.remove();
-      }, 30000); // Remove after 30 seconds
     }
   };
 
