@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Search, ChevronDown } from "lucide-react";
 
@@ -39,7 +38,7 @@ const searchEngines: SearchEngine[] = [
   {
     name: "yuanbao",
     label: "腾讯元宝",
-    url: "https://hunyuan.tencent.com/",
+    url: "https://yuanbao.tencent.com/chat/naQivTmsDa",
     placeholder: "腾讯元宝搜索...",
     isLLM: true
   }
@@ -68,12 +67,10 @@ const SearchBar = () => {
       const chatGptUrl = `${engine.url}?q=${encodeURIComponent(userQuery)}`;
       window.open(chatGptUrl, "_blank");
     } else if (engine.name === "yuanbao") {
-      // Open Tencent Yuanbao (might need adjustments based on their URL structure)
+      // Open Tencent Yuanbao with the updated URL
       window.open(engine.url, "_blank");
       
-      // If Tencent Yuanbao doesn't support direct query parameters, 
-      // we can only open the site and let the user paste the query manually
-      // You might want to copy the text to clipboard for easier pasting
+      // Copy the query to clipboard for easier pasting
       navigator.clipboard.writeText(userQuery).catch(err => {
         console.error("Could not copy text to clipboard:", err);
       });
