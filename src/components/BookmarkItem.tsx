@@ -17,7 +17,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
 
   const [{ isDragging }, drag] = useDrag({
     type: "BOOKMARK",
-    item: { id: bookmark.id, groupId: bookmark.groupId },
+    item: { id: bookmark.id, groupId: bookmark.groupId, type: "BOOKMARK" },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

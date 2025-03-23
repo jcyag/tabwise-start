@@ -1,7 +1,7 @@
 
 import { useState, useRef } from "react";
 import { FolderOpen, FolderClosed, Plus, Edit2, Trash2 } from "lucide-react";
-import { useDrop } from "react-dnd";
+import { useDrop, useDrag } from "react-dnd";
 import BookmarkItem from "./BookmarkItem";
 import { Bookmark, BookmarkGroup as BookmarkGroupType } from "../types";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,8 @@ interface BookmarkGroupProps {
   onDeleteGroup: (id: string) => void;
   onEditGroup: (id: string, newName: string) => void;
   onDropBookmark: (bookmarkId: string, targetGroupId: string) => void;
+  index: number;
+  onMoveGroup: (dragIndex: number, hoverIndex: number) => void;
 }
 
 const BookmarkGroup = ({
@@ -26,17 +28,51 @@ const BookmarkGroup = ({
   onDeleteGroup,
   onEditGroup,
   onDropBookmark,
+  index,
+  onMoveGroup,
 }: BookmarkGroupProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(group.name);
   const [isHovered, setIsHovered] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Make the group draggable
+  const [{ isDragging }, drag] = useDrag({
+    type: "GROUP",
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
 
+  // Make the group a drop target for bookmarks and other groups
   const [{ isOver }, drop] = useDrop({
-    accept: "BOOKMARK",
-    drop: (item: { id: string }) => {
-      onDropBookmark(item.id, group.id);
+    accept: ["BOOKMARK", "GROUP"],
+    drop: (item: any) => {
+      if (item.type === "BOOKMARK") {
+        onDropBookmark(item.id, group.id);
+      }
+      return undefined;
+    },
+    hover: (item: any, monitor) => {
+      // Only handle group drops here
+      if (item.type !== "GROUP") return;
+      
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) return;
+      
+      // Time to actually perform the action
+      onMoveGroup(dragIndex, hoverIndex);
+      
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex;
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -63,12 +99,18 @@ const BookmarkGroup = ({
     }
   };
 
+  // Set up the ref as both drag source and drop target
+  const groupRef = (node: HTMLDivElement | null) => {
+    drag(drop(node));
+  };
+
   return (
     <div 
-      ref={drop} 
+      ref={groupRef} 
       className={cn(
         "mb-6 w-full fade-in",
-        isOver && "ring-2 ring-blue-300 bg-slate-50/80"
+        isOver && "ring-2 ring-blue-300 bg-slate-50/80",
+        isDragging && "opacity-50"
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -76,7 +118,7 @@ const BookmarkGroup = ({
       <div className="flex items-center mb-3">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="mr-2 text-gray-500 hover:text-gray-700 transition-colors"
+          className="mr-2 text-gray-500 hover:text-gray-700 transition-colors cursor-grab"
         >
           {isExpanded ? <FolderOpen size={18} /> : <FolderClosed size={18} />}
         </button>

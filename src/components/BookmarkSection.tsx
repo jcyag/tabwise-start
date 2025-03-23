@@ -8,6 +8,7 @@ import AddBookmarkDialog from "./AddBookmarkDialog";
 import AddGroupDialog from "./AddGroupDialog";
 import { Bookmark as BookmarkType, BookmarkGroup as BookmarkGroupType } from "../types";
 import { generateId } from "../utils/helpers";
+import { toast } from "sonner";
 
 const BookmarkSection = () => {
   const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
@@ -71,6 +72,7 @@ const BookmarkSection = () => {
 
     setBookmarks([...bookmarks, newBookmark]);
     setIsAddingBookmark(false);
+    toast.success(`Added bookmark: ${name}`);
   };
 
   const handleAddGroup = () => {
@@ -85,10 +87,15 @@ const BookmarkSection = () => {
 
     setGroups([...groups, newGroup]);
     setIsAddingGroup(false);
+    toast.success(`Added group: ${name}`);
   };
 
   const handleDeleteBookmark = (id: string) => {
+    const bookmarkToDelete = bookmarks.find(bookmark => bookmark.id === id);
     setBookmarks(bookmarks.filter(bookmark => bookmark.id !== id));
+    if (bookmarkToDelete) {
+      toast.success(`Deleted bookmark: ${bookmarkToDelete.name}`);
+    }
   };
 
   const handleEditBookmark = (id: string, newName: string) => {
@@ -101,8 +108,12 @@ const BookmarkSection = () => {
 
   const handleDeleteGroup = (id: string) => {
     // Delete the group and all bookmarks in it
+    const groupToDelete = groups.find(group => group.id === id);
     setGroups(groups.filter(group => group.id !== id));
     setBookmarks(bookmarks.filter(bookmark => bookmark.groupId !== id));
+    if (groupToDelete) {
+      toast.success(`Deleted group: ${groupToDelete.name}`);
+    }
   };
 
   const handleEditGroup = (id: string, newName: string) => {
@@ -123,6 +134,17 @@ const BookmarkSection = () => {
     );
   };
 
+  const handleMoveGroup = (dragIndex: number, hoverIndex: number) => {
+    // Create new array to avoid mutating state directly
+    const newGroups = [...groups];
+    // Remove the dragged item
+    const draggedGroup = newGroups.splice(dragIndex, 1)[0];
+    // Insert it at the new position
+    newGroups.splice(hoverIndex, 0, draggedGroup);
+    // Update state
+    setGroups(newGroups);
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="w-full max-w-3xl mx-auto fade-in">
@@ -140,7 +162,7 @@ const BookmarkSection = () => {
           </button>
         </div>
 
-        {groups.map((group) => (
+        {groups.map((group, index) => (
           <BookmarkGroup
             key={group.id}
             group={group}
@@ -151,6 +173,8 @@ const BookmarkSection = () => {
             onDeleteGroup={handleDeleteGroup}
             onEditGroup={handleEditGroup}
             onDropBookmark={handleDropBookmark}
+            index={index}
+            onMoveGroup={handleMoveGroup}
           />
         ))}
 
