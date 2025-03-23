@@ -4,22 +4,16 @@ import { useState, useEffect, useRef } from "react";
 export const useBookmarkForm = () => {
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
-  const [isValid, setIsValid] = useState(true); // Always valid by default now
+  const [isValid, setIsValid] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [userEditedName, setUserEditedName] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
 
-  // Extract name from URL when URL changes (but only if user hasn't edited name)
+  // 当URL变化且值不为空，且用户没有编辑名称时，尝试提取域名作为名称
   useEffect(() => {
-    // Don't do anything if the URL is empty
-    if (!url || userEditedName) {
-      return;
-    }
-    
-    // Only try to extract domain name if URL has some content
-    if (url.trim() !== "") {
+    if (url && !userEditedName) {
       try {
-        // Simple domain extraction without validation
+        // 简单的域名提取，不做验证
         let urlToProcess = url;
         if (!/^https?:\/\//i.test(url)) {
           urlToProcess = "http://" + url;
@@ -32,7 +26,7 @@ export const useBookmarkForm = () => {
           setName(siteName);
         }
       } catch (e) {
-        // If URL parsing fails, don't change the name
+        // 如果URL解析失败，不更改名称
         console.log("Failed to extract domain:", e);
       }
     }
@@ -57,7 +51,7 @@ export const useBookmarkForm = () => {
   return {
     url,
     name,
-    isValid, // Always true now
+    isValid,
     isFetching,
     userEditedName,
     urlInputRef,

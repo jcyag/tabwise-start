@@ -1,7 +1,7 @@
 
 import { Edit } from "lucide-react";
 import { Input } from "../ui/input";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface NameInputProps {
   name: string;
@@ -9,19 +9,18 @@ interface NameInputProps {
 }
 
 const NameInput = ({ name, onChange }: NameInputProps) => {
-  // Create local state to track input value
+  // 使用本地状态跟踪输入值
   const [inputValue, setInputValue] = useState(name);
-
-  // Only update local state from props when the prop is explicitly changed from outside
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // 仅在组件挂载和name属性初始化时设置一次初始值
   useEffect(() => {
-    // Only update if the name prop is different from current state
-    // and not empty (to prevent overwriting user input)
-    if (name !== inputValue && name !== "") {
+    if (name && !inputValue) {
       setInputValue(name);
     }
-  }, [name]);
+  }, []);
 
-  // Handle input changes
+  // 处理输入变化
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
@@ -38,6 +37,7 @@ const NameInput = ({ name, onChange }: NameInputProps) => {
           <Edit size={16} className="text-gray-400" />
         </div>
         <Input
+          ref={inputRef}
           type="text"
           id="name"
           value={inputValue}

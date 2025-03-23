@@ -24,19 +24,19 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     resetForm
   } = useBookmarkForm();
 
-  // Reset form and focus URL input when dialog opens
+  // 当对话框打开时重置表单并聚焦URL输入框
   useEffect(() => {
     if (isOpen) {
       resetForm();
       
-      // Focus the URL input after a short delay to ensure the dialog is fully rendered
+      // 短暂延迟后聚焦URL输入，确保对话框完全渲染
       setTimeout(() => {
         if (urlInputRef.current) {
           urlInputRef.current.focus();
         }
       }, 100);
     }
-  }, [isOpen, resetForm]);
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,13 +46,13 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
       finalUrl = "http://" + finalUrl;
     }
     
-    // Use URL as is, or extract hostname if possible
+    // 使用URL或如果可能的话提取主机名
     let displayName = name;
     if (!displayName) {
       try {
         displayName = new URL(finalUrl).hostname;
       } catch (e) {
-        displayName = finalUrl; // Use the URL as name if parsing fails
+        displayName = finalUrl; // 如果解析失败，使用URL作为名称
       }
     }
     
@@ -80,7 +80,7 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
           onCancel={onClose}
           onSubmit={handleSubmit}
           submitLabel="Add Bookmark"
-          isSubmitDisabled={false} // Always enabled now
+          isSubmitDisabled={false}
         />
       </form>
     </DialogLayout>

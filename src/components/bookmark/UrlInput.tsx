@@ -1,7 +1,7 @@
 
 import { Link } from "lucide-react";
 import { Input } from "../ui/input";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface UrlInputProps {
   url: string;
@@ -11,18 +11,19 @@ interface UrlInputProps {
 }
 
 const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
+  // 使用本地状态跟踪输入值
   const [inputValue, setInputValue] = useState(url);
-
-  // Only update local state from props when the prop is explicitly changed from outside
+  const localInputRef = useRef<HTMLInputElement>(null);
+  const effectiveRef = inputRef || localInputRef;
+  
+  // 仅在组件挂载和url属性初始化时设置一次初始值
   useEffect(() => {
-    // Only update if the url prop is different from current state
-    // and not empty (to prevent overwriting user input)
-    if (url !== inputValue && url !== "") {
+    if (url && !inputValue) {
       setInputValue(url);
     }
-  }, [url]);
+  }, []);
 
-  // Handle input changes
+  // 处理输入变化
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
@@ -39,7 +40,7 @@ const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
           <Link size={16} className="text-gray-400" />
         </div>
         <Input
-          ref={inputRef}
+          ref={effectiveRef}
           type="text"
           id="url"
           value={inputValue}
