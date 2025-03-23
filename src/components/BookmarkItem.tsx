@@ -134,8 +134,8 @@ const BookmarkItem = ({
     }
   };
 
-  // Always show actions in edit mode, or when hovered (and not editing)
-  const showActions = isEditMode || (isHovered && !isEditing);
+  // Only show actions in edit mode (not when just hovering)
+  const showActions = isEditMode && !isEditing;
 
   return (
     <div
@@ -158,7 +158,7 @@ const BookmarkItem = ({
           onEdit={handleTitleEdit} 
         />
         
-        {showActions && !isEditing && (
+        {showActions && (
           <BookmarkActions
             onEdit={handleEditAction}
             onDelete={handleDeleteAction}
