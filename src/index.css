@@ -140,3 +140,18 @@
   z-index: 9000 !important;
 }
 
+/* Quick hover animation for buttons */
+.hover-buttons {
+  transition: opacity 0.15s ease;
+  opacity: 0;
+}
+
+.hover-trigger:hover .hover-buttons {
+  opacity: 1;
+}
+
+/* Custom styling for the bookmark header buttons */
+.bookmark-header-buttons {
+  transform: translateX(-5px);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}

@@ -7,8 +7,6 @@ import AddBookmarkDialog from "./AddBookmarkDialog";
 import AddGroupDialog from "./AddGroupDialog";
 import BookmarkHeader from "./BookmarkHeader";
 import { useBookmarks } from "../hooks/useBookmarks";
-import { Button } from "./ui/button";
-import { FolderPlus, Pencil } from "lucide-react";
 
 const BookmarkSection = () => {
   const {
@@ -50,27 +48,11 @@ const BookmarkSection = () => {
     <DndProvider backend={HTML5Backend}>
       <div className="w-full max-w-3xl mx-auto fade-in pt-4">
         <div className="flex justify-between items-center mb-4">
-          <BookmarkHeader />
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={openAddGroupDialog}
-              className="flex items-center space-x-1 text-blue-500 hover:text-blue-600 transition-colors"
-            >
-              <FolderPlus size={16} className="mr-1" />
-              <span className="text-sm">New Group</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={toggleEditMode}
-              className={isEditMode ? "bg-blue-100" : ""}
-            >
-              <Pencil size={16} className="mr-1" />
-              {isEditMode ? "Exit Edit Mode" : "Edit Mode"}
-            </Button>
-          </div>
+          <BookmarkHeader 
+            onAddGroup={openAddGroupDialog} 
+            toggleEditMode={toggleEditMode} 
+            isEditMode={isEditMode} 
+          />
         </div>
 
         {groups.map((group, index) => (
