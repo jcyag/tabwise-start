@@ -11,6 +11,7 @@ interface BookmarkGridProps {
   onEditBookmark: (id: string, newName: string) => void;
   onAddBookmark: (groupId: string) => void;
   onMoveBookmark: (dragIndex: number, hoverIndex: number, groupId: string) => void;
+  isEditMode: boolean;
 }
 
 const BookmarkGrid = ({
@@ -19,7 +20,8 @@ const BookmarkGrid = ({
   onDeleteBookmark,
   onEditBookmark,
   onAddBookmark,
-  onMoveBookmark
+  onMoveBookmark,
+  isEditMode
 }: BookmarkGridProps) => {
   const [, bookmarksDrop] = useDrop({
     accept: "BOOKMARK",
@@ -46,6 +48,7 @@ const BookmarkGrid = ({
             onEdit={onEditBookmark}
             index={bookmarkIndex}
             onMoveBookmark={onMoveBookmark}
+            isEditMode={isEditMode}
           />
         ))}
       </div>

@@ -17,6 +17,7 @@ interface BookmarkGroupProps {
   index: number;
   onMoveGroup: (dragIndex: number, hoverIndex: number) => void;
   onMoveBookmark: (dragIndex: number, hoverIndex: number, groupId: string) => void;
+  isEditMode: boolean;
 }
 
 const BookmarkGroup = ({
@@ -31,6 +32,7 @@ const BookmarkGroup = ({
   index,
   onMoveGroup,
   onMoveBookmark,
+  isEditMode,
 }: BookmarkGroupProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   
@@ -66,6 +68,7 @@ const BookmarkGroup = ({
           onEditBookmark={onEditBookmark}
           onAddBookmark={onAddBookmark}
           onMoveBookmark={onMoveBookmark}
+          isEditMode={isEditMode}
         />
       )}
     </GroupDragContainer>

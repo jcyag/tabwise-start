@@ -13,6 +13,7 @@ interface BookmarkItemProps {
   onEdit: (id: string, newName: string) => void;
   index: number;
   onMoveBookmark?: (dragIndex: number, hoverIndex: number, groupId: string) => void;
+  isEditMode?: boolean;
 }
 
 // Define the DragItem interface for type safety
@@ -23,7 +24,14 @@ interface DragItem {
   type: string;
 }
 
-const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: BookmarkItemProps) => {
+const BookmarkItem = ({ 
+  bookmark, 
+  onDelete, 
+  onEdit, 
+  index, 
+  onMoveBookmark,
+  isEditMode = false 
+}: BookmarkItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -127,6 +135,8 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
     }
   };
 
+  const showActions = isEditMode || (isHovered && !isEditing);
+
   return (
     <div
       ref={ref}
@@ -134,9 +144,9 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
       data-handler-id={handlerId}
     >
       <div
-        className="w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item cursor-pointer"
+        className={`w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item cursor-pointer ${isEditMode ? 'ring-1 ring-blue-300' : ''}`}
         style={{ maxWidth: "120px", height: "auto", minHeight: "60px" }}
-        onClick={handleClick}
+        onClick={!isEditMode ? handleClick : undefined}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -148,7 +158,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
           onEdit={handleTitleEdit} 
         />
         
-        {isHovered && !isEditing && (
+        {showActions && !isEditing && (
           <BookmarkActions
             onEdit={handleEditAction}
             onDelete={handleDeleteAction}

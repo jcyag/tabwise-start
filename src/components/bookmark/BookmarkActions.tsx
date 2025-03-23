@@ -8,19 +8,27 @@ interface BookmarkActionsProps {
 
 const BookmarkActions = ({ onEdit, onDelete }: BookmarkActionsProps) => {
   return (
-    <div className="flex justify-center space-x-1 mt-1">
-      <div
-        className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
-        onClick={onEdit}
+    <div className="flex justify-center space-x-2 mt-1">
+      <button
+        className="text-gray-400 hover:text-gray-600 p-1 rounded-full transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit();
+        }}
+        aria-label="Edit bookmark"
       >
-        <Edit size={12} />
-      </div>
-      <div
-        className="text-gray-400 hover:text-red-500 p-0.5 rounded-full transition-colors"
-        onClick={onDelete}
+        <Edit size={14} />
+      </button>
+      <button
+        className="text-gray-400 hover:text-red-500 p-1 rounded-full transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+        aria-label="Delete bookmark"
       >
-        <Trash2 size={12} />
-      </div>
+        <Trash2 size={14} />
+      </button>
     </div>
   );
 };

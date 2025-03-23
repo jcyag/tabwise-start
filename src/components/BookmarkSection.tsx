@@ -7,12 +7,15 @@ import AddBookmarkDialog from "./AddBookmarkDialog";
 import AddGroupDialog from "./AddGroupDialog";
 import BookmarkHeader from "./BookmarkHeader";
 import { useBookmarks } from "../hooks/useBookmarks";
+import { Button } from "./ui/button";
+import { Pencil } from "lucide-react";
 
 const BookmarkSection = () => {
   const {
     bookmarks,
     groups,
     selectedGroupId,
+    isEditMode,
     setSelectedGroupId,
     handleAddBookmark,
     handleCreateBookmark,
@@ -23,7 +26,8 @@ const BookmarkSection = () => {
     handleEditGroup,
     handleDropBookmark,
     handleMoveGroup,
-    handleMoveBookmark
+    handleMoveBookmark,
+    toggleEditMode
   } = useBookmarks();
 
   const [isAddingBookmark, setIsAddingBookmark] = useState(false);
@@ -45,7 +49,18 @@ const BookmarkSection = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="w-full max-w-3xl mx-auto fade-in pt-4">
-        <BookmarkHeader onAddGroup={openAddGroupDialog} />
+        <div className="flex justify-between items-center mb-4">
+          <BookmarkHeader onAddGroup={openAddGroupDialog} />
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={toggleEditMode}
+            className={isEditMode ? "bg-blue-100" : ""}
+          >
+            <Pencil size={16} className="mr-1" />
+            {isEditMode ? "Exit Edit Mode" : "Edit Mode"}
+          </Button>
+        </div>
 
         {groups.map((group, index) => (
           <BookmarkGroup
@@ -61,6 +76,7 @@ const BookmarkSection = () => {
             index={index}
             onMoveGroup={handleMoveGroup}
             onMoveBookmark={handleMoveBookmark}
+            isEditMode={isEditMode}
           />
         ))}
 

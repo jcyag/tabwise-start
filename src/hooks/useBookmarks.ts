@@ -7,6 +7,7 @@ export function useBookmarks() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [groups, setGroups] = useState<BookmarkGroup[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     const loadedBookmarks = localStorage.getItem("bookmarks");
@@ -147,10 +148,15 @@ export function useBookmarks() {
     localStorage.setItem("bookmarks", JSON.stringify(finalBookmarks));
   };
 
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
+
   return {
     bookmarks,
     groups,
     selectedGroupId,
+    isEditMode,
     setSelectedGroupId,
     handleAddBookmark,
     handleCreateBookmark,
@@ -161,6 +167,7 @@ export function useBookmarks() {
     handleEditGroup,
     handleDropBookmark,
     handleMoveGroup,
-    handleMoveBookmark
+    handleMoveBookmark,
+    toggleEditMode
   };
 }
