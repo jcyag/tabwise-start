@@ -1,7 +1,7 @@
 
 interface DialogActionsProps {
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit: (e?: React.FormEvent) => void;
   submitLabel: string;
   isSubmitDisabled: boolean;
 }
@@ -24,7 +24,7 @@ const DialogActions = ({
       <button
         type="submit"
         disabled={isSubmitDisabled}
-        onClick={onSubmit}
+        onClick={(e) => onSubmit(e)}
         className={`px-4 py-2 text-sm text-white rounded-md transition-colors ${
           !isSubmitDisabled
             ? "bg-blue-500 hover:bg-blue-600"
