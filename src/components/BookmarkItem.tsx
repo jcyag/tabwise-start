@@ -73,18 +73,23 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
 
       // Determine mouse position
       const clientOffset = monitor.getClientOffset();
+      if (!clientOffset) return;
 
       // Get pixels to the left
-      const hoverClientX = clientOffset!.x - hoverBoundingRect.left;
+      const hoverClientX = clientOffset.x - hoverBoundingRect.left;
 
+      // FIXED: The drag/hover direction logic was inverted
       // Only perform the move when the mouse has crossed half of the items width
-      // Dragging right
-      if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
+      
+      // When dragging right to left (dragIndex > hoverIndex)
+      // We only move when mouse is left of the middle
+      if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
         return;
       }
 
-      // Dragging left
-      if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
+      // When dragging left to right (dragIndex < hoverIndex)
+      // We only move when mouse is right of the middle  
+      if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
         return;
       }
 
