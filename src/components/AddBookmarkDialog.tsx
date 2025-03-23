@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { X, Link, Edit } from "lucide-react";
 import { Input } from "./ui/input";
@@ -107,7 +108,7 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay flex items-center justify-center">
+    <div className="modal-overlay">
       <div 
         ref={dialogRef}
         className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden animate-fade-in"
