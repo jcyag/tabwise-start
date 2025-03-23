@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { postMessageToIframes } from "@/utils/helpers";
 
 interface SearchEngine {
   name: string;
@@ -40,7 +41,7 @@ const searchEngines: SearchEngine[] = [
   {
     name: "yuanbao",
     label: "腾讯元宝",
-    url: "https://yuanbao.tencent.com/chat/naQivTmsDa",
+    url: "https://yuanbao.tencent.com/chat/",
     placeholder: "腾讯元宝搜索...",
     isLLM: true
   }
@@ -70,12 +71,19 @@ const SearchBar = () => {
       const chatGptUrl = `${engine.url}?q=${encodeURIComponent(userQuery)}`;
       window.open(chatGptUrl, "_blank");
     } else if (engine.name === "yuanbao") {
-      // Open Tencent Yuanbao with the updated URL
+      // Generate a conversation ID using timestamp and random string
+      const timestamp = Date.now();
+      const randomStr = Math.random().toString(36).substring(2, 10);
+      const conversationId = `${timestamp}${randomStr}`;
+      
+      // Create the yuanbao URL with the conversation ID
+      const yuanbaoUrl = `${engine.url}${conversationId}`;
+      
       // Use localStorage to temporarily store the query
       localStorage.setItem('yuanbaoQuery', userQuery);
       
       // Open Yuanbao in a new tab
-      const yuanbaoWindow = window.open(engine.url, "_blank");
+      const yuanbaoWindow = window.open(yuanbaoUrl, "_blank");
       
       if (yuanbaoWindow) {
         // Set up a message to the user
