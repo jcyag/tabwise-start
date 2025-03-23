@@ -10,8 +10,9 @@ export const useBookmarkForm = () => {
   const [userEditedName, setUserEditedName] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
 
-  // Validate URL and extract name when URL changes
+  // Validate URL and extract name when URL changes, but with debounce
   useEffect(() => {
+    // Don't do anything if the URL is empty
     if (!url) {
       setIsValid(false);
       return;

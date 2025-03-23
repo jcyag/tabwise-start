@@ -11,12 +11,15 @@ interface UrlInputProps {
 }
 
 const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
-  // Create local state to track input value
   const [inputValue, setInputValue] = useState(url);
 
-  // Update local state when prop changes
+  // Only update local state from props when the prop is explicitly changed from outside
   useEffect(() => {
-    setInputValue(url);
+    // Only update if the url prop is different from current state
+    // and not empty (to prevent overwriting user input)
+    if (url !== inputValue && url !== "") {
+      setInputValue(url);
+    }
   }, [url]);
 
   // Handle input changes

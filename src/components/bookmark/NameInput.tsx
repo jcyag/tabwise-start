@@ -12,9 +12,13 @@ const NameInput = ({ name, onChange }: NameInputProps) => {
   // Create local state to track input value
   const [inputValue, setInputValue] = useState(name);
 
-  // Update local state when prop changes
+  // Only update local state from props when the prop is explicitly changed from outside
   useEffect(() => {
-    setInputValue(name);
+    // Only update if the name prop is different from current state
+    // and not empty (to prevent overwriting user input)
+    if (name !== inputValue && name !== "") {
+      setInputValue(name);
+    }
   }, [name]);
 
   // Handle input changes
