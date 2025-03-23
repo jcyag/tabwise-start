@@ -20,19 +20,19 @@ const BookmarkHeader = ({ onAddGroup, toggleEditMode, isEditMode }: BookmarkHead
       
       <div className="flex items-center space-x-2">
         <Button 
-          variant="outline" 
+          variant="ghost" 
           size="sm" 
           onClick={onAddGroup}
-          className="flex items-center space-x-1 text-blue-500 hover:text-blue-600 transition-colors"
+          className="flex items-center space-x-1 text-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-colors rounded-lg"
         >
           <FolderPlus size={16} className="mr-1" />
           <span className="text-sm">New Group</span>
         </Button>
         <Button 
-          variant="outline" 
+          variant="ghost" 
           size="sm" 
           onClick={toggleEditMode}
-          className={isEditMode ? "bg-blue-100" : ""}
+          className={`hover:bg-blue-50 rounded-lg ${isEditMode ? "bg-blue-100" : ""}`}
         >
           <Pencil size={16} className="mr-1" />
           {isEditMode ? "Exit Edit Mode" : "Edit Mode"}
