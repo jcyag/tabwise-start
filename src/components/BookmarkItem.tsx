@@ -58,7 +58,7 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit }: BookmarkItemProps) => {
     >
       <button
         className="w-full glass-morphism rounded-lg p-2 flex flex-col items-center justify-center space-y-1.5 hover:shadow-md transition-shadow bookmark-item"
-        style={{ maxWidth: "80px", height: "auto", minHeight: "60px" }}
+        style={{ maxWidth: "120px", height: "auto", minHeight: "60px" }}
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
