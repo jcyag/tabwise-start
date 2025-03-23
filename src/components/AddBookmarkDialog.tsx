@@ -41,15 +41,22 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isValid) return;
-    
     let finalUrl = url;
-    if (!/^https?:\/\//i.test(finalUrl)) {
+    if (!/^https?:\/\//i.test(finalUrl) && finalUrl.trim() !== "") {
       finalUrl = "http://" + finalUrl;
     }
     
-    onAdd(finalUrl, name || new URL(finalUrl).hostname);
+    // Use URL as is, or extract hostname if possible
+    let displayName = name;
+    if (!displayName) {
+      try {
+        displayName = new URL(finalUrl).hostname;
+      } catch (e) {
+        displayName = finalUrl; // Use the URL as name if parsing fails
+      }
+    }
     
+    onAdd(finalUrl, displayName);
     resetForm();
     onClose();
   };
@@ -73,7 +80,7 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
           onCancel={onClose}
           onSubmit={handleSubmit}
           submitLabel="Add Bookmark"
-          isSubmitDisabled={!isValid}
+          isSubmitDisabled={false} // Always enabled now
         />
       </form>
     </DialogLayout>

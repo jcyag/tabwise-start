@@ -1,43 +1,38 @@
 
 import { useState, useEffect, useRef } from "react";
-import { validateUrl } from "../utils/helpers";
 
 export const useBookmarkForm = () => {
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(true); // Always valid by default now
   const [isFetching, setIsFetching] = useState(false);
   const [userEditedName, setUserEditedName] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
 
-  // Validate URL and extract name when URL changes, but with debounce
+  // Extract name from URL when URL changes (but only if user hasn't edited name)
   useEffect(() => {
     // Don't do anything if the URL is empty
-    if (!url) {
-      setIsValid(false);
+    if (!url || userEditedName) {
       return;
     }
-
-    // Normalize URL for validation
-    let urlToValidate = url;
-    if (!/^https?:\/\//i.test(url)) {
-      urlToValidate = "http://" + url;
-    }
     
-    // Validate URL
-    const valid = validateUrl(urlToValidate);
-    setIsValid(valid);
-    
-    // Only extract name if URL is valid and user hasn't edited the name field
-    if (valid && url.trim() !== "" && !userEditedName) {
+    // Only try to extract domain name if URL has some content
+    if (url.trim() !== "") {
       try {
-        const domain = new URL(urlToValidate).hostname.replace("www.", "");
+        // Simple domain extraction without validation
+        let urlToProcess = url;
+        if (!/^https?:\/\//i.test(url)) {
+          urlToProcess = "http://" + url;
+        }
+        
+        const domain = new URL(urlToProcess).hostname.replace("www.", "");
         const domainParts = domain.split(".");
         if (domainParts.length > 0) {
           const siteName = domainParts[0].charAt(0).toUpperCase() + domainParts[0].slice(1);
           setName(siteName);
         }
       } catch (e) {
+        // If URL parsing fails, don't change the name
         console.log("Failed to extract domain:", e);
       }
     }
@@ -56,13 +51,13 @@ export const useBookmarkForm = () => {
     setUrl("");
     setName("");
     setUserEditedName(false);
-    setIsValid(false);
+    setIsValid(true);
   };
 
   return {
     url,
     name,
-    isValid,
+    isValid, // Always true now
     isFetching,
     userEditedName,
     urlInputRef,

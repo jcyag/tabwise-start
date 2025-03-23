@@ -44,18 +44,11 @@ const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
           id="url"
           value={inputValue}
           onChange={handleChange}
-          className={`w-full pl-10 pr-4 ${
-            inputValue && !isValid
-              ? "border-red-300 focus:ring-red-200"
-              : ""
-          }`}
+          className="w-full pl-10 pr-4"
           placeholder="https://example.com"
           autoComplete="off"
         />
       </div>
-      {inputValue && !isValid && (
-        <p className="mt-1 text-sm text-red-500">Please enter a valid URL</p>
-      )}
     </div>
   );
 };
