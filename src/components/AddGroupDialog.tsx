@@ -54,7 +54,7 @@ const AddGroupDialog = ({ isOpen, onClose, onAdd }: AddGroupDialogProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div className="modal-overlay">
       <div 
         ref={dialogRef}
         className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden animate-fade-in"
