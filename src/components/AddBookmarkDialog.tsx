@@ -1,6 +1,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { X, Link, Edit } from "lucide-react";
+import { Input } from "./ui/input";
+import { validateUrl, extractDomain } from "../utils/helpers";
 
 interface AddBookmarkDialogProps {
   isOpen: boolean;
@@ -14,12 +16,20 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
   const [name, setName] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [userEditedName, setUserEditedName] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen && urlInputRef.current) {
       urlInputRef.current.focus();
+    }
+    
+    // Reset states when dialog opens
+    if (isOpen) {
+      setUrl("");
+      setName("");
+      setUserEditedName(false);
     }
   }, [isOpen]);
 
@@ -52,8 +62,8 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
         new URL(urlToValidate);
         setIsValid(true);
         
-        // Try to fetch page title if URL is valid
-        if (url !== "" && name === "") {
+        // Try to fetch page title if URL is valid and user hasn't edited the name
+        if (url !== "" && name === "" && !userEditedName) {
           setIsFetching(true);
           
           // In a real extension, we would use chrome APIs to get page info
@@ -78,7 +88,7 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     } catch (e) {
       setIsValid(false);
     }
-  }, [url, name]);
+  }, [url, name, userEditedName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +106,12 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
     // Reset form
     setUrl("");
     setName("");
+    setUserEditedName(false);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    setUserEditedName(true);
   };
 
   if (!isOpen) return null;
@@ -125,16 +141,16 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Link size={16} className="text-gray-400" />
               </div>
-              <input
+              <Input
                 ref={urlInputRef}
                 type="text"
                 id="url"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className={`w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                className={`w-full pl-10 pr-4 py-2 ${
                   url && !isValid
                     ? "border-red-300 focus:ring-red-200"
-                    : "border-gray-300 focus:ring-blue-200 focus:border-blue-300"
+                    : ""
                 }`}
                 placeholder="https://example.com"
               />
@@ -152,12 +168,12 @@ const AddBookmarkDialog = ({ isOpen, onClose, onAdd, groupId }: AddBookmarkDialo
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Edit size={16} className="text-gray-400" />
               </div>
-              <input
+              <Input
                 type="text"
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300"
+                onChange={handleNameChange}
+                className="w-full pl-10 pr-4 py-2"
                 placeholder="Bookmark name"
               />
             </div>
