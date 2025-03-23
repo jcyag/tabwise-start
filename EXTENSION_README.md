@@ -3,20 +3,29 @@
 
 这是一个美观的新标签页扩展，提供搜索栏、最近浏览历史和书签管理功能。
 
-## 构建和安装步骤
+## 快速安装（推荐）
 
-### 1. 构建扩展
+### 1. 构建并打包扩展
 
 ```bash
 # 安装所有依赖
 npm install
 
-# 构建扩展
+# 安装archiver包（用于创建zip文件）
+npm install archiver
+
+# 构建并打包扩展
 node build-extension.js
 ```
 
 ### 2. 在Chrome中安装扩展
 
+方法一：直接安装zip
+1. 打开Chrome浏览器，访问 chrome://extensions/
+2. 开启右上角的"开发者模式"
+3. 将生成的 `elegant-new-tab.zip` 文件直接拖放到Chrome扩展页面
+
+方法二：加载文件夹
 1. 打开Chrome浏览器
 2. 在地址栏输入 `chrome://extensions/` 并访问
 3. 在右上角启用"开发者模式"
@@ -41,4 +50,4 @@ node build-extension.js
 
 ## 分享扩展
 
-如果您想与他人分享此扩展，只需将构建好的 `dist` 目录压缩为zip文件，并让他们按照上述步骤3-5安装。
+想与他人分享此扩展，只需分享生成的 `elegant-new-tab.zip` 文件，让他们按照"方法一"进行安装。
