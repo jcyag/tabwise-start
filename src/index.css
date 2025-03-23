@@ -131,3 +131,10 @@
   background-color: white;
   z-index: 100;
 }
+
+/* Fix for dropdown overlapping issue */
+[role="dialog"],
+[role="menu"],
+.dropdown-content {
+  z-index: 1000 !important;
+}
