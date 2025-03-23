@@ -27,17 +27,17 @@ const Index = () => {
       <div className="container max-w-5xl mx-auto px-4 pt-4">
         <div className="relative">
           {/* Search bar */}
-          <div style={{ position: 'relative', zIndex: 50 }}>
+          <div style={{ position: 'relative', zIndex: 100 }}>
             <SearchBar />
           </div>
           
           {/* Recent history - adjusted spacing */}
-          <div style={{ position: 'relative', zIndex: 40 }}>
+          <div style={{ position: 'relative', zIndex: 10 }}>
             <RecentHistory />
           </div>
           
           {/* Bookmark section */}
-          <div style={{ position: 'relative', zIndex: 30 }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
             <BookmarkSection />
           </div>
         </div>

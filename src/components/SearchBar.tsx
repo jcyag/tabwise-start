@@ -88,7 +88,7 @@ const SearchBar = () => {
             </button>
             
             {dropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-36 rounded-md shadow-lg dropdown-menu z-[1000] animate-fade-in overflow-hidden">
+              <div className="absolute top-full left-0 mt-2 w-36 rounded-md shadow-lg dropdown-menu animate-fade-in overflow-hidden" style={{ zIndex: 9999 }}>
                 <div className="py-1">
                   {searchEngines.map((engine) => (
                     <button
