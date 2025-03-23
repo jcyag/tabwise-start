@@ -39,10 +39,10 @@ const searchEngines: SearchEngine[] = [
     isLLM: true
   },
   {
-    name: "yuanbao",
-    label: "腾讯元宝",
-    url: "https://yuanbao.tencent.com/chat/",
-    placeholder: "腾讯元宝搜索...",
+    name: "doubao",
+    label: "豆包",
+    url: "https://www.doubao.com/chat/",
+    placeholder: "豆包搜索...",
     isLLM: true
   }
 ];
@@ -70,44 +70,44 @@ const SearchBar = () => {
       // Open ChatGPT with the query
       const chatGptUrl = `${engine.url}?q=${encodeURIComponent(userQuery)}`;
       window.open(chatGptUrl, "_blank");
-    } else if (engine.name === "yuanbao") {
+    } else if (engine.name === "doubao") {
       // Generate a conversation ID using timestamp and random string
       const timestamp = Date.now();
       const randomStr = Math.random().toString(36).substring(2, 10);
       const conversationId = `${timestamp}${randomStr}`;
       
-      // Create the yuanbao URL with the conversation ID
-      const yuanbaoUrl = `${engine.url}${conversationId}`;
+      // Create the doubao URL
+      const doubaoUrl = `${engine.url}${conversationId}`;
       
-      // Function to directly send a message to Yuanbao
-      const sendMessageToYuanbao = async (tab: Window | null, message: string) => {
+      // Function to directly send a message to Doubao
+      const sendMessageToDoubao = async (tab: Window | null, message: string) => {
         if (!tab) return;
         
         // Wait for the page to load
         setTimeout(() => {
           // Create a message event to send to the new window
           const messageEvent = {
-            type: 'YUANBAO_AUTO_QUERY',
+            type: 'DOUBAO_AUTO_QUERY',
             query: message
           };
           
-          // Send the message to the new window - fix type error
+          // Send the message to the new window
           tab.postMessage(messageEvent, '*');
           
           // Notify the user
           toast({
-            title: "已发送到腾讯元宝",
-            description: "您的问题已自动发送至元宝对话框。",
+            title: "已发送到豆包",
+            description: "您的问题已自动发送至豆包对话框。",
             duration: 5000,
           });
         }, 2000); // Wait 2 seconds for the page to load
       };
       
-      // Open Yuanbao in a new tab
-      const yuanbaoWindow = window.open(yuanbaoUrl, "_blank");
+      // Open Doubao in a new tab
+      const doubaoWindow = window.open(doubaoUrl, "_blank");
       
-      // Send the message to Yuanbao
-      sendMessageToYuanbao(yuanbaoWindow, userQuery);
+      // Send the message to Doubao
+      sendMessageToDoubao(doubaoWindow, userQuery);
       
       // Also copy the query to clipboard as a fallback
       navigator.clipboard.writeText(userQuery).catch(err => {
@@ -119,34 +119,34 @@ const SearchBar = () => {
         });
       });
       
-      // Add a message listener to allow communication with the Yuanbao page
-      window.addEventListener('message', function yuanbaoMessageHandler(event) {
-        if (event.data && event.data.type === 'YUANBAO_READY') {
+      // Add a message listener to allow communication with the Doubao page
+      window.addEventListener('message', function doubaoMessageHandler(event) {
+        if (event.data && event.data.type === 'DOUBAO_READY') {
           const sourceWindow = event.source as Window;
           sourceWindow.postMessage({
-            type: 'YUANBAO_QUERY',
+            type: 'DOUBAO_QUERY',
             query: userQuery
           }, '*');
           
           // Clean up the event listener after use
-          window.removeEventListener('message', yuanbaoMessageHandler);
+          window.removeEventListener('message', doubaoMessageHandler);
         }
       });
       
-      // Inject a script into the parent page to help with Yuanbao integration
-      const yuanbaoScript = document.createElement('script');
-      yuanbaoScript.id = 'yuanbao-integration';
-      yuanbaoScript.textContent = `
-        // This script will automatically try to click on the input field and add text when Yuanbao is loaded
+      // Inject a script into the parent page to help with Doubao integration
+      const doubaoScript = document.createElement('script');
+      doubaoScript.id = 'doubao-integration';
+      doubaoScript.textContent = `
+        // This script will automatically try to click on the input field and add text when Doubao is loaded
         document.addEventListener('DOMContentLoaded', function() {
-          // Notify the parent window that Yuanbao is ready
+          // Notify the parent window that Doubao is ready
           window.opener && window.opener.postMessage({
-            type: 'YUANBAO_READY'
+            type: 'DOUBAO_READY'
           }, '*');
           
           // Listen for messages from the parent window
           window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'YUANBAO_QUERY' || event.data.type === 'YUANBAO_AUTO_QUERY') {
+            if (event.data && event.data.type === 'DOUBAO_QUERY' || event.data.type === 'DOUBAO_AUTO_QUERY') {
               // Try to find the input field and button
               setTimeout(() => {
                 const inputFields = document.querySelectorAll('textarea, input[type="text"]');
@@ -191,12 +191,12 @@ const SearchBar = () => {
         });
       `;
       
-      // Append the script to help with Yuanbao integration
-      document.body.appendChild(yuanbaoScript);
+      // Append the script to help with Doubao integration
+      document.body.appendChild(doubaoScript);
       
       // Clean up after a delay
       setTimeout(() => {
-        const script = document.getElementById('yuanbao-integration');
+        const script = document.getElementById('doubao-integration');
         if (script) script.remove();
       }, 30000); // Remove after 30 seconds
     }
