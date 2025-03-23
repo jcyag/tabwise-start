@@ -1,8 +1,11 @@
 
 import { useState, useRef } from "react";
-import { Trash2, Edit } from "lucide-react";
 import { useDrag, useDrop } from "react-dnd";
 import { Bookmark } from "../types";
+import BookmarkActions from "./bookmark/BookmarkActions";
+import BookmarkFavicon from "./bookmark/BookmarkFavicon";
+import BookmarkTitle from "./bookmark/BookmarkTitle";
+import DraggableBookmark from "./bookmark/DraggableBookmark";
 
 interface BookmarkItemProps {
   bookmark: Bookmark;
@@ -22,7 +25,6 @@ interface DragItem {
 
 const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: BookmarkItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newName, setNewName] = useState(bookmark.name);
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -78,9 +80,6 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
       // Get pixels to the left
       const hoverClientX = clientOffset.x - hoverBoundingRect.left;
 
-      // FIXED: The drag/hover direction logic was inverted
-      // Only perform the move when the mouse has crossed half of the items width
-      
       // When dragging right to left (dragIndex > hoverIndex)
       // We only move when mouse is left of the middle
       if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
@@ -109,31 +108,22 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
   // Connect the drag and drop refs
   drag(drop(ref));
 
-  const handleEdit = () => {
-    if (newName.trim() !== "") {
-      onEdit(bookmark.id, newName);
-      setIsEditing(false);
-    }
+  const handleEditAction = () => {
+    setIsEditing(true);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleEdit();
-    }
+  const handleTitleEdit = (newName: string) => {
+    onEdit(bookmark.id, newName);
+    setIsEditing(false);
+  };
+
+  const handleDeleteAction = () => {
+    onDelete(bookmark.id);
   };
 
   const handleClick = () => {
     if (!isEditing) {
       window.open(bookmark.url, "_blank");
-    }
-  };
-
-  const getFaviconUrl = (url: string) => {
-    try {
-      const urlObj = new URL(url);
-      return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
-    } catch {
-      return `https://www.google.com/s2/favicons?domain=${url}&sz=64`;
     }
   };
 
@@ -150,56 +140,19 @@ const BookmarkItem = ({ bookmark, onDelete, onEdit, index, onMoveBookmark }: Boo
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative flex-shrink-0">
-          <img
-            src={getFaviconUrl(bookmark.url)}
-            alt=""
-            className="w-5 h-5 rounded-sm object-contain"
-            onError={(e) => {
-              // Fallback if favicon doesn't load
-              (e.target as HTMLImageElement).src = "https://via.placeholder.com/64?text=🔖";
-            }}
-          />
-        </div>
+        <BookmarkFavicon url={bookmark.url} />
         
-        {isEditing ? (
-          <input
-            type="text"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            onBlur={handleEdit}
-            onKeyDown={handleKeyDown}
-            className="w-full text-xs rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-300"
-            autoFocus
-            onClick={(e) => e.stopPropagation()}
-          />
-        ) : (
-          <span className="text-xs text-gray-700 truncate w-full text-center">
-            {bookmark.name}
-          </span>
-        )}
+        <BookmarkTitle 
+          name={bookmark.name} 
+          isEditing={isEditing} 
+          onEdit={handleTitleEdit} 
+        />
         
         {isHovered && !isEditing && (
-          <div className="flex justify-center space-x-1 mt-1">
-            <div
-              className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsEditing(true);
-              }}
-            >
-              <Edit size={12} />
-            </div>
-            <div
-              className="text-gray-400 hover:text-red-500 p-0.5 rounded-full transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(bookmark.id);
-              }}
-            >
-              <Trash2 size={12} />
-            </div>
-          </div>
+          <BookmarkActions
+            onEdit={handleEditAction}
+            onDelete={handleDeleteAction}
+          />
         )}
       </div>
     </div>
