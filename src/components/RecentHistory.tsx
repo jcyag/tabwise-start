@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -21,10 +20,10 @@ const RecentHistory = () => {
     const fetchHistory = async () => {
       try {
         // Check if Chrome history API is available
-        if (isChromeHistoryAvailable()) {
+        if (isChromeHistoryAvailable() && window.chrome && window.chrome.history) {
           console.log("Chrome history API available, fetching real data");
           // We're in a Chrome extension with history permission, use the actual API
-          chrome.history.search(
+          window.chrome.history.search(
             { text: '', maxResults: 6, startTime: 0 },
             (historyItems) => {
               const processedItems: HistoryItem[] = historyItems.map((item) => ({
