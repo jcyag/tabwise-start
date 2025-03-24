@@ -75,7 +75,7 @@ export const isExtensionContext = (): boolean => {
   return typeof window !== 'undefined' && 
          'chrome' in window && 
          window.chrome !== undefined && 
-         typeof window.chrome.extension !== 'undefined';
+         typeof window.chrome?.extension !== 'undefined';
 };
 
 // Check if Chrome history API is available
@@ -83,5 +83,5 @@ export const isChromeHistoryAvailable = (): boolean => {
   return typeof window !== 'undefined' && 
          'chrome' in window && 
          window.chrome !== undefined && 
-         typeof window.chrome.history !== 'undefined';
+         typeof window.chrome?.history !== 'undefined';
 };

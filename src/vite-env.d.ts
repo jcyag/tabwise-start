@@ -46,7 +46,7 @@ interface ChromeHistoryItem {
 // Declare chrome as a global variable
 declare global {
   interface Window {
-    chrome: Chrome | undefined;
+    chrome?: Chrome;
   }
 }
 

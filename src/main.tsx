@@ -7,7 +7,7 @@ import './index.css'
 const isExtensionEnvironment = typeof window !== 'undefined' && 
                                'chrome' in window && 
                                window.chrome !== undefined && 
-                               typeof window.chrome.runtime !== 'undefined';
+                               typeof window.chrome?.runtime !== 'undefined';
 
 // 记录环境信息以便调试
 console.log("Environment:", {
