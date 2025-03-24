@@ -4,7 +4,10 @@ import App from './App.tsx'
 import './index.css'
 
 // 检查是否在扩展环境中
-const isExtensionEnvironment = !!window.chrome && !!window.chrome.runtime;
+const isExtensionEnvironment = typeof window !== 'undefined' && 
+                               'chrome' in window && 
+                               !!window.chrome && 
+                               !!window.chrome.runtime;
 
 // 记录环境信息以便调试
 console.log("Environment:", {

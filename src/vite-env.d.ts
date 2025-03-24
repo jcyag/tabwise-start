@@ -6,6 +6,20 @@ interface Chrome {
   extension?: {
     getURL: (path: string) => string;
   };
+  runtime?: {
+    lastError?: { message: string };
+    onInstalled?: { addListener: (callback: () => void) => void };
+    onMessage?: { 
+      addListener: (
+        callback: (
+          message: any, 
+          sender: any, 
+          sendResponse: (response?: any) => void
+        ) => void | boolean
+      ) => void 
+    };
+    onError?: { addListener: (callback: (error: any) => void) => void };
+  };
   history?: {
     search: (
       query: {
@@ -15,6 +29,9 @@ interface Chrome {
       },
       callback: (results: ChromeHistoryItem[]) => void
     ) => void;
+  };
+  bookmarks?: {
+    getTree: (callback: (results: any) => void) => void;
   };
 }
 
@@ -26,5 +43,12 @@ interface ChromeHistoryItem {
   visitCount?: number;
 }
 
-// Make chrome available in the global scope
+// Declare chrome as a global variable
+declare global {
+  interface Window {
+    chrome?: Chrome;
+  }
+}
+
+// For non-module scripts
 declare const chrome: Chrome | undefined;
