@@ -10,15 +10,15 @@ interface NameInputProps {
 
 const NameInput = ({ name, onChange }: NameInputProps) => {
   // 使用本地状态跟踪输入值
-  const [inputValue, setInputValue] = useState(name);
+  const [inputValue, setInputValue] = useState(name || "");
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // 仅在组件挂载和name属性初始化时设置一次初始值
+  // 在组件挂载和name属性初始化或更新时设置值
   useEffect(() => {
-    if (name && !inputValue) {
+    if (name !== undefined && name !== null) {
       setInputValue(name);
     }
-  }, []);
+  }, [name]);
 
   // 处理输入变化
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

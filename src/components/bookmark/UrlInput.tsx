@@ -12,16 +12,16 @@ interface UrlInputProps {
 
 const UrlInput = ({ url, onChange, isValid, inputRef }: UrlInputProps) => {
   // 使用本地状态跟踪输入值
-  const [inputValue, setInputValue] = useState(url);
+  const [inputValue, setInputValue] = useState(url || "");
   const localInputRef = useRef<HTMLInputElement>(null);
   const effectiveRef = inputRef || localInputRef;
   
-  // 仅在组件挂载和url属性初始化时设置一次初始值
+  // 在组件挂载和url属性初始化或更新时设置值
   useEffect(() => {
-    if (url && !inputValue) {
+    if (url !== undefined && url !== null) {
       setInputValue(url);
     }
-  }, []);
+  }, [url]);
 
   // 处理输入变化
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
